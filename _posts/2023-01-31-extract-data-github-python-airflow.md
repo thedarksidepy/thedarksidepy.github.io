@@ -42,7 +42,7 @@ g = Github('')  # paste your access token here
 print(g)
 ```
 
-    <github.MainClass.Github object at 0x7fde6be60d00>
+    <github.MainClass.Github object at 0x78a8030cfb50>
 
 <br>
 `get_user()` method returns the authenticated Github user.
@@ -58,12 +58,12 @@ print('Bio:', my_user.bio)
 print('Number of public repos:', my_user.public_repos)
 ```
 
-	AuthenticatedUser(login=None)
-	Login: thedarksidepy
-	Name:
-	Location:
-	Bio: Welcome to the Dark Side
-	Number of public repos: 1
+    AuthenticatedUser(login=None)
+    Login: thedarksidepy
+    Name: None
+    Location: None
+    Bio: Welcome to the Dark Side
+    Number of public repos: 1
 
 <br>
 `get_repo()` method returns a specific repository by its name and owner.
@@ -78,11 +78,11 @@ print('Language:', my_repo.language)
 print('URL:', my_repo.html_url)
 ```
 
-	Repository(full_name="thedarksidepy/thedarksidepy.github.io")
-	Name: thedarksidepy.github.io
-	Description:
-	Language:
-	URL: https://github.com/thedarksidepy/thedarksidepy.github.io
+  	Repository(full_name="thedarksidepy/thedarksidepy.github.io")
+    Name: thedarksidepy.github.io
+    Description: None
+    Language: Shell
+    URL: https://github.com/thedarksidepy/thedarksidepy.github.io
 
 <br>
 `get_user().get_repos()` method returns a list of repositories owned by the authenticated user.
@@ -102,15 +102,13 @@ for repo in my_repos:
         print('\n')
 ```
 
-	<github.PaginatedList.PaginatedList object at 0x7fde89459d30>
-	
-	
-	Name: 
-	Description: 
-	Language: 
-	URL: 
-	
-	(...)
+	    <github.PaginatedList.PaginatedList object at 0x78a7e2d25610>
+
+      Name: thedarksidepy.github.io
+      Description: None
+      Language: Shell
+      URL: https://github.com/thedarksidepy/thedarksidepy.github.io
+
 
 <br>
 `get_commits()` method of the repository object returns a list of commits.
@@ -130,7 +128,33 @@ for commit in commits:
 
 ```
 
-	<github.PaginatedList.PaginatedList object at 0x7fde6be0c670>
+	  <github.PaginatedList.PaginatedList object at 0x78a7e2d6c510>
+
+
+    SHA: 2a974f4c409bb4d4d995279e9735e252a1160c88
+    Author: None
+    Date: 2025-07-02 16:47:31+00:00
+    Message: Update 2023-04-30-chat-gpt-and-data-engineering.md
+    
+    
+    SHA: c7de4f847a7d9568e4919597b123f7c01f96faf3
+    Author: None
+    Date: 2025-07-02 16:47:13+00:00
+    Message: Create authors.yml
+    
+    
+    SHA: a431560a9135c69cdb1c1fc58fb914734f353a02
+    Author: None
+    Date: 2025-07-02 16:45:58+00:00
+    Message: Update 2023-01-31-extract-data-github-python-airflow.md
+    
+    
+    SHA: 8a7d46ab66e5f61125d49b2d203155a16c921120
+    Author: None
+    Date: 2025-07-02 16:40:05+00:00
+    Message: Add files via upload
+    
+    (...)
 	
 
 <br>
@@ -139,7 +163,7 @@ The `get_contents()` method in PyGithub is used to retrieve the contents of a fi
 ```python
 my_repo = g.get_repo('thedarksidepy/thedarksidepy.github.io')
 
-sample_file = my_repo.get_contents('_layouts/default.html')
+sample_file = my_repo.get_contents('.gitmodules')
 
 print('Type:', sample_file.type)
 print('Name:', sample_file.name)
@@ -148,12 +172,12 @@ print('\n')
 print('Content:', sample_file.decoded_content)
 ```
 
-	Type: file
-	Name: default.html
-	Path: _layouts/default.html
-	
-	Content: b'<!DOCTYPE html>\n<html lang="
-	(...)
+  	Type: file
+    Name: .gitmodules
+    Path: .gitmodules
+    
+    
+    Content: b'[submodule "assets/lib"]\n\tpath = assets/lib\n\turl = https://github.com/cotes2020/chirpy-static-assets.git\n'
 	
 <br>	
 ```python
@@ -169,18 +193,13 @@ for content in sample_dir:
 ```
 
 	Type: dir
-	Name: img
-	Path: assets/img
-	
-	
-	Type: file
-	Name: main.scss
-	Path: assets/main.scss
-	
-	
-	Type: dir
-	Name: notebooks
-	Path: assets/notebooks
+  Name: img
+  Path: assets/img
+  
+  
+  Type: file
+  Name: lib
+  Path: assets/lib
 
 <br>    	
 ## GithubOperator in Airflow {#githuboperator-in-airflow}
