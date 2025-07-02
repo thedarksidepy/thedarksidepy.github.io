@@ -1,6 +1,6 @@
 ---
 title:  Star and Snowflake schema
-author: thedarkside.py
+author: thedarkside
 date:   2023-02-15 00:00:00 +0000
 categories: [Data Modeling]
 tags: [datamodeling]
