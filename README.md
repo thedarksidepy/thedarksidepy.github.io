@@ -1,3 +1,3 @@
 # thedarkside.py
 
-Usees the [**Chirpy**][chirpy] Jekyll theme.
+Usees the Chirpy Jekyll theme.
