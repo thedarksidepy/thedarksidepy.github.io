@@ -1,6 +1,6 @@
 ---
 title:  Chat GPT and Data Engineering
-author: ChatGPT
+author: chatgpt
 date:   2023-04-30 00:00:00 +0000 
 categories: [Data Engineering]
 tags: [dataengineering]
