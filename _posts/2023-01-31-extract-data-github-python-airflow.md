@@ -180,6 +180,7 @@ print('Content:', sample_file.decoded_content)
     Content: b'[submodule "assets/lib"]\n\tpath = assets/lib\n\turl = https://github.com/cotes2020/chirpy-static-assets.git\n'
 	
 <br>	
+
 ```python
 my_repo = g.get_repo('thedarksidepy/thedarksidepy.github.io')
 
