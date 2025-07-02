@@ -222,6 +222,10 @@ Next, create a GitHub connection.
 
 ![](/assets/img/2023-01-31-extract-github-data/Screenshot 2023-01-25 at 12.04.10.png)
 
+Similarly in Airflow 3, except you have to provide the access token in the `Password` field.
+
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.17.10.png)
+
 You should now see `github_default` listed under the Connections page and you can use it in your DAGs. 
 
 Import the GithubOperator as follows:  
@@ -241,6 +245,8 @@ get_user_info = GithubOperator(
 )
 ```
 
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.23.02.png)
+
 <br>
 ### Get repo data {#get-repo-data}
 Similarly to the example above, you can retrieve information about a repository. The result of the API call is processed using a lambda function that returns a formatted string containing information about the GitHub repository. Note that the `get_repo()` method requires a `full_name_or_id` argument.
@@ -256,6 +262,8 @@ get_repo_info = GithubOperator(
 )
 ```
 
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.24.36.png)
+
 <br>
 ### List repositories {#list-repositories}
 Let's return a list of all repositories' names where the currently authenticated user is the owner. 
@@ -270,6 +278,8 @@ list_repos = GithubOperator(
                       if repo.owner.login == user.login],
 )
 ```
+
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.26.20.png)
 
 Naturally, you can retrieve all the repo details as before. Let's return a list of dictionaries. Each dictionary in the list contains the name, description, programming language, and URL of a repository. The repositories are filtered so that only those owned by the authenticated user are included in the list.
 
@@ -287,6 +297,8 @@ list_repos_details = GithubOperator(
                       if repo.owner.login == user.login]
 )
 ```
+
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.26.45.png)
 
 <br>
 ### List commits {#list-commits}
@@ -307,6 +319,8 @@ list_commits = GithubOperator(
 )
 ```
 
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.27.06.png)
+
 <br>
 ### Get contents {#get-contents}
 Lastly, let's retrieve the contents of the `assets` directory.
@@ -324,6 +338,9 @@ get_contents = GithubOperator(
                       for content in repo.get_contents('assets')]
 )
 ```
+
+![](/assets/img/2023-01-31-extract-github-data/Screenshot 2025-07-02 at 21.27.16.png)
+
 
 <br>
 ## Hands-on example: list all file paths in a repository {#hands-on-example--list-all-file-paths-in-a-repository}
@@ -351,7 +368,7 @@ while len(contents) > 1:
 print(files_list)
 ```
 
-	['.gitignore', '404.html', 'Dockerfile', 'Gemfile', 'Gemfile.lock', 'README.md', '_config.yml', 'index.md', '.devcontainer/devcontainer.json', '_layouts/default.html', '_layouts/home.html', '_posts/2019-07-09-
+	['.editorconfig', '.gitattributes', '.gitignore', '.gitmodules', '.nojekyll', 'Gemfile', 'LICENSE', 'README.md', '_config.yml', 'index.html', '.devcontainer/devcontainer.json', '.devcontainer/post-create.sh', '.vscode/extensions.json', '.vscode/settings.json', '.vscode/tasks.json', '_data/authors.yml', '_data/contact.yml', '_data/share.yml', 
 	(...)
 
 <br>
