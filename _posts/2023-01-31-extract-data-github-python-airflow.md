@@ -192,14 +192,13 @@ for content in sample_dir:
     print('\n')
 ```
 
-	Type: dir
-  Name: img
-  Path: assets/img
-  
-  
-  Type: file
-  Name: lib
-  Path: assets/lib
+  	Type: dir
+    Name: img
+    Path: assets/img
+    
+    Type: file
+    Name: lib
+    Path: assets/lib
 
 <br>    	
 ## GithubOperator in Airflow {#githuboperator-in-airflow}
