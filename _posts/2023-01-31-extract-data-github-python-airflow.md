@@ -78,7 +78,8 @@ print('Language:', my_repo.language)
 print('URL:', my_repo.html_url)
 ```
 
-  	Repository(full_name="thedarksidepy/thedarksidepy.github.io")
+    Repository(full_name="thedarksidepy/thedarksidepy.github.io")
+    
     Name: thedarksidepy.github.io
     Description: None
     Language: Shell
@@ -172,10 +173,9 @@ print('\n')
 print('Content:', sample_file.decoded_content)
 ```
 
-  	Type: file
+    Type: file
     Name: .gitmodules
     Path: .gitmodules
-    
     
     Content: b'[submodule "assets/lib"]\n\tpath = assets/lib\n\turl = https://github.com/cotes2020/chirpy-static-assets.git\n'
 	
@@ -193,13 +193,13 @@ for content in sample_dir:
     print('\n')
 ```
 
-  	Type: dir
-    Name: img
-    Path: assets/img
-    
-    Type: file
-    Name: lib
-    Path: assets/lib
+      Type: dir
+      Name: img
+      Path: assets/img
+      
+      Type: file
+      Name: lib
+      Path: assets/lib
 
 <br>    	
 ## GithubOperator in Airflow {#githuboperator-in-airflow}
