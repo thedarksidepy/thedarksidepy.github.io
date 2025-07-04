@@ -11,31 +11,40 @@ tags: [Airflow]
 ## Airflow is a data orchestrator. 
 
 ↳ It manages the process of moving data between various data tools. 
+
 ↳ It coordinates and automates data flows across various tools and systems. 
+
 ↳ It allows to programmatically author, schedule and monitor workflows.
 
 ## Brief orchestration / workflow management history:
 1) Pre-unix era:
 
 ↳ manual batch processing and scheduling
+
 ↳ error prone
 
 2) Early computing:
 
 ↳ basic time-based scheduling (e.g. CRON for Linux)
+
 ↳ rise of ETL tooling (e.g. Informatica) → expensive and resource intensive
 
 3) Data and open-source:
 
 ↳ rise of tools like Luigi or Oozie
+
 ↳ limitations: some tools working only with Hadoop ecosystem, limited scalability, XML or config files used to define workflows 
 
 4) Modern data orchestration:
 
 ↳ Apache Airflow (2015)
+
 ↳ open-source
+
 ↳ pipelines as code in Python
+
 ↳ integration with hundreds of external systems
+
 ↳ time and event-based (data aware) scheduling 
 
 > Airflow is suitable only for batch processing (not streaming) but it can be used with Kafka.  
@@ -47,7 +56,9 @@ tags: [Airflow]
 # Topic 2: Airflow Concepts
 
 DAG = Directed Acyclic Graph → a single data pipeline
+
 Task → a single unit of work in a DAG → represented by a single node
+
 Operator → defines the work a task does → there are 900+ built-in operators
 
 ## Core Airflow components
@@ -64,7 +75,9 @@ Built with FastAPI (modern web framework), API Server **serves the Airflow UI** 
 **Schedules tasks** when the dependencies are met. 
 
 ↳ every 5 sec reads from Metadata Database to check if there are tasks to run
+
 ↳ creates and schedules Task Instance objects 
+
 ↳ handles task retries and failures
 
 Scheduler can be run on a single machine or distributed across multiple machines. Multiple schedulers can run at the same time. It is a long-running process (= a program continuously running in the background for an extended period). Once scheduler is started, it continues to run until explicitly stopped manually or by the system. 
