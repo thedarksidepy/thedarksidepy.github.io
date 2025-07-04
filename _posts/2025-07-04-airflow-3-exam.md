@@ -1,5 +1,5 @@
 ---
-title: "Certification Exam: Apache Airflow 3 Fundamentals"
+title: Apache Airflow 3 Fundamentals – Certification Exam
 author: thedarkside
 date: 2025-07-04 00:00:00 +0100
 categories: [Airflow]
