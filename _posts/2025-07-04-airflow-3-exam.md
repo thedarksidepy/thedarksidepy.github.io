@@ -6,9 +6,81 @@ categories: [Airflow]
 tags: [Airflow]
 ---
 
+# Prerequisite: Install and run Airflow using Astro
+
+> Ask Astro: https://ask.astronomer.io/ is the Apache Airflow's AI language model. 
+{: .prompt-tip }
+
+Astro CLI is an open-source, fully managed Airflow solution. It is the easiest and fastest way to set up and run Airflow locally. 
+
+## Prerequisites 
+
+Install Homebrew: https://brew.sh/
+
+Install Docker: https://www.docker.com/
+
+## Install the Astro CLI
+
+`brew install astro` → install the Astro CLI
+
+`astro version` → check that the installation was successful
+
+`brew upgrade astro` → upgrade the Astro version
+
+`brew uninstall astro` → uninstall Astro
+
+## Create an Astro project
+
+> See the full instruction: https://www.astronomer.io/docs/astro/cli/get-started-cli
+{: .prompt-tip }
+
+`astro dev init` → generate new project
+
+All required project files will automatically be created. Most important are:
+
+- `dags` → the main folder for DAG pipelines (python scripts)
+- `include` → put here any additional scripts like SQL queries or bash scripts 
+- `plugins` → additional custom components like operators, hooks, sensors, etc.
+- `.env` → environment variables
+- `requirements.txt` → additional python packages
+
+## Run Airflow locally
+
+`astro dev start` → run the project locally
+
+This command spins up 5 Docker containers on your machine: postgres, api server, dag processor, scheduler and triggerer.
+
+![](/assets/img/airflow-3-exam/airflow-docker-containers.png)
+
+After your project builds successfully, open the Airflow UI in your web browser at `https://localhost:8080/`.
+
+`astro dev restart` → restart the project
+
+`astro dev stop` → stop the project
+
+`astro dev kill` → delete the project with all metadata
+
+## Run Astro project from Visual Studio Code
+
+- install the `Dev Containers` extension
+- Terminal > New Terminal
+- `astro dev start`
+- click on the icon on the bottom left (Open a Remote Window)
+- choose: Attach to Running Container
+- select the scheduler container (a new window will open)
+- File > Open Folder
+- `/usr/local/airflow` > OK
+
+Now, the Visual Studio Code is running inside the Docker container corresponding to the Airflow Scheduler.
+
+To close the connection:
+
+- click on the bar on the bottom left (the blue one with the name of the container)
+- Close Remote Connection
+
 # Topic 1: Airflow Use Cases 
 
-## Airflow is a data orchestrator. 
+## Apache Airflow is a data orchestrator. 
 
 ↳ It manages the process of moving data between various data tools. 
 
