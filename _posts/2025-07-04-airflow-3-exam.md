@@ -82,7 +82,7 @@ To close the connection:
 
 # Topic 1: Airflow Use Cases 
 
-## Apache Airflow is a data orchestrator. 
+## Apache Airflow is a data orchestrator
 
 ↳ It manages the process of moving data between various data tools. 
 
@@ -90,7 +90,7 @@ To close the connection:
 
 ↳ It allows to programmatically author, schedule and monitor workflows.
 
-## Brief orchestration / workflow management history:
+## Brief orchestration / workflow management history
 1) Pre-unix era:
 
 ↳ manual batch processing and scheduling
@@ -141,15 +141,21 @@ acyclic => there are no loops
 
 ## Core Airflow components
 
+Airflow has seven main components.
+
 ![](/assets/img/airflow-3-exam/airflow-3-components.jpg)
 
+### Metadata Database
+
+Used to store all metadata related to the Airflow instance. 
+
 ### DAG File Processor 
-A dedicated process for **parsing DAG files** from the `dags` folder. By default looks for new DAGs to parse **every 5 minutes**. 
+A dedicated process for retrieving and **parsing DAG files** from the `dags` folder. By default looks for new DAGs to parse **every 5 minutes**. 
 
 Serialized DAG file is written to Metadata Database.
 
 ###  Scheduler 
-**Schedules tasks** when the dependencies are met. 
+Monitors and **schedules tasks** when the dependencies are met. 
 
 ↳ by default reads from the Metadata Database every 5 seconds to check if there are any tasks to run
 
@@ -176,17 +182,28 @@ Defines **how tasks are executed and on which system**.
 Pushes the Task Instance objects into Queue.
 
 ### Queue
-Defines the **execution order**.
+Holds the tasks that are ready to be executed and defines the **execution order**.
 
-### Worker 
+### Worker(s) 
 **Executes tasks**. Picks up Task Instance objects from the Queue and runs the code. 
 
 Communicates the Tasks statuses to the API Server. 
 
 There can be multiple workers. They can be put in a separate cluster. 
 
-### Triggerer 
-Process running asyncio to support deferrable operators. 
+## Stages of running a DAG
+
+1) the DAG File Processor scans the `dags` directory for new files (by default every 5 minutes)
+
+2) after the DAG File Processor detects a new DAG, this DAG is parsed and serialized into the Metadata Database 
+
+3) the Scheduler checks the Metadata Database (by default every 5 seconds) for DAGs that are ready to run
+
+4) once the DAG is ready to run, its tasks are put into the executor's queue
+
+5) once a worker is available, it will retrieve a task to execute from the queue 
+
+6) the worker executes the taks
 
 
 ## Airflow providers
@@ -195,6 +212,13 @@ Core capabilities of Airflow can be extended by installing additional packages c
 You can search for different providers on <https://registry.astronomer.io/>
 
 ## Defining a DAG in Airflow
+
+A DAG has 4 core parts:
+
+- the import statements where the needed operators or classes are imported
+- the DAG definition, where the DAG object is called and its properties are defined 
+- the DAG body where tasks are defined with the operators they will run
+- the dependencies where the order of execution of the tasks is defined 
 
 There are 3 ways to declare a DAG:
 1) using the `@dag` decorator
@@ -336,7 +360,7 @@ with DAG(
 task_a >> task_b
 ```
 
-### Using the standard constructor 
+### Using the standard constructor (old way, not recommended)
 
 Import the DAG object:
 
@@ -403,7 +427,7 @@ task_a >> task_b
 > Be careful to give unique names to all your DAGs. If two DAGs share the same name, Airflow will randomly parse one of them. 
 {: .prompt-danger }
 
-### Mandatory and optional DAG parameters 
+## Mandatory and optional DAG parameters 
 
 #### `dag_id` 
 
@@ -427,7 +451,7 @@ from pendulum import datetime
 
 How often the DAG runs. Some of the most commonly used schedules are:
 
-`None` → don't schedule, the DAG will have to be run manually
+`None` → don't schedule, the DAG will have to be run manually (through UI, API or CLI)
 
 `@daily` → run every day at midnight
 
@@ -453,6 +477,45 @@ If you set `catchup=True` the scheduler will run all non-triggered DAG runs from
 
 From Airflow 3, the default behavior is `CATCHUP_BY_DEFAULT=False`. This parameter can be changed globally or at the DAG level. 
 
-### DAG Runs
+## `default_args`
 
-A DAG Run is an object representing an instantiation of the DAG in time. Any time the DAG is executed, a DAG Run is created and all tasks inside it are executed. The status of the DAG Run depends on the tasks states. 
+These are the arguments that will be passed to all tasks in a DAG. They can be overriden at the task level. They are defined in a dictionary, e.g.:
+
+```python
+default_args={
+    "depends_on_past": False,
+    "retries": 1,
+    (...)
+```
+
+## DAG Runs
+
+A DAG Run object is an instance of a DAG. Any time the DAG is executed, a DAG Run is created.
+
+DAG Run properties:
+
+- `run_id` → unique ID of a DAG Run
+- `data_interval_start`
+- `logical_date`
+- `data_interval_end`
+
+Possible DAG Run states:
+
+- `queued`
+- `running`
+- `success` / `failed`
+
+> By default, 16 DAG Runs of the same DAG can run at the same time. 
+{: .prompt-info }
+
+Active DAGs → unpaused, ready to be scheduled 
+
+Running DAGs → currently running
+
+# Topic 3: Dependencies
+
+## Defining tasks
+
+In Airflow 3, there is a new way of defining tasks using `@task` decorator. 
+
+
