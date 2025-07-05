@@ -65,19 +65,52 @@ Operator → defines the work a task does → there are 900+ built-in operators
 
 ![](/assets/img/airflow-3-exam/airflow-3-components.jpg)
 
-### API Server 
-In Airflow 3, the flask-based Webserver and API logic from Airflow 2, was merged into a single API Server.
+### DAG File Processor 
+A dedicated process for **parsing DAG files** from the `dags` folder. By default looks for new DAGs to parse **every 5 minutes**. 
 
-Built with FastAPI (modern web framework), API Server **serves the Airflow UI** (React-based) and **handles task execution requests**. API Server takes information from workers about tasks statuses and updates the Metadata Database.
-
+Serialized DAG file is written to Metadata Database.
 
 ###  Scheduler 
 **Schedules tasks** when the dependencies are met. 
 
-↳ every 5 sec reads from Metadata Database to check if there are tasks to run
+↳ by default reads from the Metadata Database every 5 seconds to check if there are any tasks to run
 
-↳ creates and schedules Task Instance objects 
+↳ creates and schedules Task Instance objects
 
-↳ handles task retries and failures
+↳ designed to run as a persistent service (continuously run in the background for an extended period)
 
-Scheduler can be run on a single machine or distributed across multiple machines. Multiple schedulers can run at the same time. It is a long-running process (= a program continuously running in the background for an extended period). Once scheduler is started, it continues to run until explicitly stopped manually or by the system. 
+↳ can be run on a single machine or distributed across multiple machines
+
+↳ multiple schedulers can run at the same time
+
+↳ once scheduler is started, it continues to run until explicitly stopped manually or by the system
+
+### API Server 
+API Server takes information from workers about **tasks statuses** and **updates the Metadata Database**.
+
+API Server also **serves the Airflow UI** (React-based).
+
+In Airflow 3, the flask-based Webserver and API logic from Airflow 2, was merged into a single API Server.
+
+### Executor 
+Defines **how tasks are executed and on which system**. 
+
+Pushes the Task Instance objects into Queue.
+
+### Queue
+Defines the **execution order**.
+
+### Worker 
+**Executes tasks**. Picks up Task Instance objects from the Queue and runs the code. 
+
+Communicates the Tasks statuses to the API Server. 
+
+There can be multiple workers. They can be put in a separate cluster. 
+
+### Triggerer 
+Process running asyncio to support deferrable operators. 
+
+
+## Airflow providers
+Core capabilities of Airflow can be extended by installing additional packages called providers. 
+
