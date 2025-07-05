@@ -61,6 +61,10 @@ Task → a single unit of work in a DAG → represented by a single node
 
 Operator → defines the work a task does → there are 900+ built-in operators
 
+directed => if multiple tasks exist, each must have at least one defined upstream or downstream task
+
+acyclic => there are no loops
+
 ## Core Airflow components
 
 ![](/assets/img/airflow-3-exam/airflow-3-components.jpg)
@@ -114,3 +118,146 @@ Process running asyncio to support deferrable operators.
 ## Airflow providers
 Core capabilities of Airflow can be extended by installing additional packages called providers. 
 
+You can search for different providers on https://registry.astronomer.io/
+
+## Defining a DAG in Airflow
+
+There are 3 ways to declare a DAG:
+1) using the `@dag` decorator
+2) using the context manager (`with` statement)
+3) using the standard constructor
+
+### Using the DAG decorator 
+
+Import the dag and task decorators:
+
+```python
+from airflow.sdk import dag, task
+```
+
+or
+
+```python
+from airflow.decorators import dag, task
+```
+
+Define any functions you need for your tasks:
+```python
+def _task_a():
+    print("Hello from task A")
+
+def _task_b():
+    print("Hello from task B")
+```
+
+Define the DAG object:
+
+```python
+@dag(schedule=None)
+def my_dag():  # this will be the name (unique identifier) of the DAG 
+```
+
+As a best practice, keep the name od the DAG the same as the filename. 
+
+Define tasks (operators):
+
+```python
+    task_a = PythonOperator(task_id='a', python_callable=_task_a)
+    task_b = PythonOperator(task_id='b', python_callable=_task_b)
+```
+
+Define tasks dependencies:
+
+```python
+task_a >> task_b  # task_a is called upstream, task_b is called downstream
+```
+
+Always call your dag function at the end of the file:
+```python 
+my_dag()
+```
+
+The `@dag` decorator is a DAG factory – it returns a DAG object when called.
+
+Complete script:
+```python
+from airflow.sdk import dag, task
+
+
+def _task_a():
+    print("Hello from task A")
+
+def _task_b():
+    print("Hello from task B")
+
+
+@dag(schedule=None)
+def my_dag():  
+    task_a = PythonOperator(task_id='a', python_callable=_task_a)
+    task_b = PythonOperator(task_id='b', python_callable=_task_b)
+
+task_a >> task_b
+
+my_dag()
+```
+
+### Using the context manager 
+
+Import the DAG object:
+
+```python
+from airflow.sdk import DAG
+```
+
+Define any functions you need for your tasks:
+```python
+def _task_a():
+    print("Hello from task A")
+
+def _task_b():
+    print("Hello from task B")
+```
+
+Open a DAG context:
+
+```python
+with DAG(
+    dag_id="my_dag",
+    schedule=None
+):
+```
+
+Define tasks (operators):
+
+```python
+    task_a = PythonOperator(task_id='a', python_callable=_task_a)
+    task_b = PythonOperator(task_id='b', python_callable=_task_b)
+```
+
+Define tasks dependencies:
+
+```python
+task_a >> task_b
+```
+
+Complete script:
+```python
+from airflow.sdk import DAG
+
+
+def _task_a():
+    print("Hello from task A")
+
+def _task_b():
+    print("Hello from task B")
+
+
+with DAG(
+    dag_id="my_dag",
+    schedule=None
+):
+    task_a = PythonOperator(task_id='a', python_callable=_task_a)
+    task_b = PythonOperator(task_id='b', python_callable=_task_b)
+
+task_a >> task_b
+```
