@@ -6,20 +6,20 @@ categories: [Airflow]
 tags: [Airflow]
 ---
 
-# Prerequisite: Install and run Airflow using Astro
+## Prerequisite: Install and run Airflow using Astro
 
 > Ask Astro: <https://ask.astronomer.io/> is the Apache Airflow's AI language model. 
 {: .prompt-tip }
 
 Astro CLI is an open-source, fully managed Airflow solution. It is the easiest and fastest way to set up and run Airflow locally. 
 
-## Prerequisites 
+### Prerequisites 
 
 Install Homebrew: <https://brew.sh/>
 
 Install Docker: <https://www.docker.com/>
 
-## Install the Astro CLI
+### Install the Astro CLI
 
 `brew install astro` → install the Astro CLI
 
@@ -29,7 +29,7 @@ Install Docker: <https://www.docker.com/>
 
 `brew uninstall astro` → uninstall Astro
 
-## Create an Astro project
+### Create an Astro project
 
 > See the full instruction: <https://www.astronomer.io/docs/astro/cli/get-started-cli>
 {: .prompt-tip }
@@ -46,7 +46,7 @@ All required project files will automatically be created. Most important are:
 
 By default, Airflow timezone is set to UTC. This can be changed using the `AIRFLOW__CORE__DEFAULT_TIMEZONE` variable.
 
-## Run Airflow locally
+### Run Airflow locally
 
 `astro dev start` → run the project locally
 
@@ -62,7 +62,7 @@ After your project builds successfully, open the Airflow UI in your web browser 
 
 `astro dev kill` → delete the project with all metadata
 
-## Run Astro project from Visual Studio Code
+### Run Astro project from Visual Studio Code
 
 - install the `Dev Containers` extension
 - Terminal > New Terminal
@@ -80,9 +80,9 @@ To close the connection:
 - click on the bar on the bottom left (the blue one with the name of the container)
 - Close Remote Connection
 
-# Topic 1: Airflow Use Cases 
+## Topic 1: Airflow Use Cases 
 
-## Apache Airflow is a data orchestrator
+### Apache Airflow is a data orchestrator
 
 ↳ It manages the process of moving data between various data tools. 
 
@@ -90,7 +90,7 @@ To close the connection:
 
 ↳ It allows to programmatically author, schedule and monitor workflows.
 
-## Brief orchestration / workflow management history
+### Brief orchestration / workflow management history
 1) Pre-unix era:
 
 ↳ manual batch processing and scheduling
@@ -127,7 +127,7 @@ To close the connection:
 > Airflow can process (transform) data but it is not specifically designed for that (as a best practice use dedicated external systems like Spark and always carefully consider available Airflow resources). 
 {: .prompt-warning }
 
-# Topic 2: Airflow Concepts
+## Topic 2: Airflow Concepts
 
 DAG = Directed Acyclic Graph → a single data pipeline
 
@@ -139,22 +139,22 @@ directed => if multiple tasks exist, each must have at least one defined upstrea
 
 acyclic => there are no loops
 
-## Core Airflow components
+### Core Airflow components
 
 Airflow has seven main components.
 
 ![](/assets/img/airflow-3-exam/airflow-3-components.jpg)
 
-### Metadata Database
+#### Metadata Database
 
 Used to store all metadata related to the Airflow instance. 
 
-### DAG File Processor 
+#### DAG File Processor 
 A dedicated process for retrieving and **parsing DAG files** from the `dags` folder. By default looks for new DAGs to parse **every 5 minutes**. 
 
 Serialized DAG file is written to Metadata Database.
 
-###  Scheduler 
+####  Scheduler 
 Monitors and **schedules tasks** when the dependencies are met. 
 
 ↳ by default reads from the Metadata Database every 5 seconds to check if there are any tasks to run
@@ -169,29 +169,29 @@ Monitors and **schedules tasks** when the dependencies are met.
 
 ↳ once scheduler is started, it continues to run until explicitly stopped manually or by the system
 
-### API Server 
+#### API Server 
 API Server takes information from workers about **tasks statuses** and **updates the Metadata Database**.
 
 API Server also **serves the Airflow UI** (React-based).
 
 In Airflow 3, the flask-based Webserver and API logic from Airflow 2, was merged into a single API Server.
 
-### Executor 
+#### Executor 
 Defines **how tasks are executed and on which system**. 
 
 Pushes the Task Instance objects into Queue.
 
-### Queue
+#### Queue
 Holds the tasks that are ready to be executed and defines the **execution order**.
 
-### Worker(s) 
+#### Worker(s) 
 **Executes tasks**. Picks up Task Instance objects from the Queue and runs the code. 
 
 Communicates the Tasks statuses to the API Server. 
 
 There can be multiple workers. They can be put in a separate cluster. 
 
-## Stages of running a DAG
+### Stages of running a DAG
 
 1) the DAG File Processor scans the `dags` directory for new files (by default every 5 minutes)
 
@@ -206,12 +206,12 @@ There can be multiple workers. They can be put in a separate cluster.
 6) the worker executes the taks
 
 
-## Airflow providers
+### Airflow providers
 Core capabilities of Airflow can be extended by installing additional packages called providers. 
 
 You can search for different providers on <https://registry.astronomer.io/>
 
-## Defining a DAG in Airflow
+### Defining a DAG in Airflow
 
 A DAG has 4 core parts:
 
@@ -225,7 +225,7 @@ There are 3 ways to declare a DAG:
 2) using the context manager (`with` statement)
 3) using the standard constructor
 
-### Using the DAG decorator 
+#### Using the DAG decorator 
 
 Import the dag and task decorators:
 
@@ -299,7 +299,7 @@ task_a >> task_b
 my_dag_decorator()
 ```
 
-### Using the context manager 
+#### Using the context manager 
 
 Import the DAG object:
 
@@ -360,7 +360,7 @@ with DAG(
 task_a >> task_b
 ```
 
-### Using the standard constructor (old way, not recommended)
+#### Using the standard constructor (old way, not recommended)
 
 Import the DAG object:
 
@@ -427,7 +427,7 @@ task_a >> task_b
 > Be careful to give unique names to all your DAGs. If two DAGs share the same name, Airflow will randomly parse one of them. 
 {: .prompt-danger }
 
-## Mandatory and optional DAG parameters 
+### Mandatory and optional DAG parameters 
 
 #### `dag_id` 
 
@@ -477,7 +477,7 @@ If you set `catchup=True` the scheduler will run all non-triggered DAG runs from
 
 From Airflow 3, the default behavior is `CATCHUP_BY_DEFAULT=False`. This parameter can be changed globally or at the DAG level. 
 
-## `default_args`
+### `default_args`
 
 These are the arguments that will be passed to all tasks in a DAG. They can be overriden at the task level. They are defined in a dictionary, e.g.:
 
@@ -488,7 +488,7 @@ default_args={
     (...)
 ```
 
-## DAG Runs
+### DAG Runs
 
 A DAG Run object is an instance of a DAG. Any time the DAG is executed, a DAG Run is created.
 
@@ -512,9 +512,9 @@ Active DAGs → unpaused, ready to be scheduled
 
 Running DAGs → currently running
 
-# Topic 3: Dependencies
+## Topic 3: Dependencies
 
-## Defining tasks
+### Defining tasks
 
 In Airflow 3, there is a new way of defining tasks using `@task` decorator. 
 
