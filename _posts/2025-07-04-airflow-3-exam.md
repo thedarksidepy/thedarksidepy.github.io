@@ -8,16 +8,16 @@ tags: [Airflow]
 
 # Prerequisite: Install and run Airflow using Astro
 
-> Ask Astro: https://ask.astronomer.io/ is the Apache Airflow's AI language model. 
+> Ask Astro: <https://ask.astronomer.io/> is the Apache Airflow's AI language model. 
 {: .prompt-tip }
 
 Astro CLI is an open-source, fully managed Airflow solution. It is the easiest and fastest way to set up and run Airflow locally. 
 
 ## Prerequisites 
 
-Install Homebrew: https://brew.sh/
+Install Homebrew: <https://brew.sh/>
 
-Install Docker: https://www.docker.com/
+Install Docker: <https://www.docker.com/>
 
 ## Install the Astro CLI
 
@@ -43,6 +43,8 @@ All required project files will automatically be created. Most important are:
 - `plugins` → additional custom components like operators, hooks, sensors, etc.
 - `.env` → environment variables
 - `requirements.txt` → additional python packages
+
+By default, Airflow timezone is set to UTC. This can be changed using the `AIRFLOW__CORE__DEFAULT_TIMEZONE` variable.
 
 ## Run Airflow locally
 
@@ -397,3 +399,12 @@ task_b = PythonOperator(task_id='b', python_callable=_task_b, dag=my_dag_standar
 
 task_a >> task_b
 ```
+
+> Be careful to give unique names to all your DAGs. If two DAGs share the same name, Airflow will randomly parse one of them. 
+{: .prompt-danger }
+
+`dag_id` is the only mandatory DAG parameter. It must be set explicitly when using the `DAG` class. If using the `@dag` decorator, the function name is used as the `dag_id` by default.
+
+There is a bunch of recommended but not required parameters. Their default values or behavior may differ based on the Airflow version and configuration. 
+
+`start_date` 
