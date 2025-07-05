@@ -31,7 +31,7 @@ Install Docker: <https://www.docker.com/>
 
 ## Create an Astro project
 
-> See the full instruction: https://www.astronomer.io/docs/astro/cli/get-started-cli
+> See the full instruction: <https://www.astronomer.io/docs/astro/cli/get-started-cli>
 {: .prompt-tip }
 
 `astro dev init` → generate new project
@@ -192,7 +192,7 @@ Process running asyncio to support deferrable operators.
 ## Airflow providers
 Core capabilities of Airflow can be extended by installing additional packages called providers. 
 
-You can search for different providers on https://registry.astronomer.io/
+You can search for different providers on <https://registry.astronomer.io/>
 
 ## Defining a DAG in Airflow
 
@@ -403,8 +403,56 @@ task_a >> task_b
 > Be careful to give unique names to all your DAGs. If two DAGs share the same name, Airflow will randomly parse one of them. 
 {: .prompt-danger }
 
-`dag_id` is the only mandatory DAG parameter. It must be set explicitly when using the `DAG` class. If using the `@dag` decorator, the function name is used as the `dag_id` by default.
+### Mandatory and optional DAG parameters 
+
+#### `dag_id` 
+
+The only mandatory DAG parameter. It must be set explicitly when using the `DAG` class. If using the `@dag` decorator, the function name is used as the `dag_id` by default.
 
 There is a bunch of recommended but not required parameters. Their default values or behavior may differ based on the Airflow version and configuration. 
 
-`start_date` 
+#### `start_date` 
+
+The date at which the DAG starts being scheduled (also: the timestamp from which the scheduler will attempt to backfill).
+
+```python 
+from pendulum import datetime
+
+@dag(
+    start_date=datetime(2024, 1, 1),
+    ...)
+```
+
+#### `schedule` 
+
+How often the DAG runs. Some of the most commonly used schedules are:
+
+`None` → don't schedule, the DAG will have to be run manually
+
+`@daily` → run every day at midnight
+
+`@continuous` → run as soon as the previous DAG run finishes (note: this is **not** real-time processing)
+
+<https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/cron.html#cron-presets>
+
+Use `duration` object to schedule the DAG to run every `x` days, e.g. run every 3 days:
+
+```python 
+from pendulum import duration 
+
+@dag(
+    schedule=duration(days=3),
+    ...)
+```
+
+If a `schedule` is set for a DAG, the `start_date` becomes mandatory.
+
+#### `catchup` 
+
+If you set `catchup=True` the scheduler will run all non-triggered DAG runs from the past (since the `start_date`).
+
+From Airflow 3, the default behavior is `CATCHUP_BY_DEFAULT=False`. This parameter can be changed globally or at the DAG level. 
+
+### DAG Runs
+
+A DAG Run is an object representing an instantiation of the DAG in time. Any time the DAG is executed, a DAG Run is created and all tasks inside it are executed. The status of the DAG Run depends on the tasks states. 
