@@ -8,10 +8,10 @@ tags: [Airflow]
 
 ## Prerequisite: Install and run Airflow using Astro
 
+Astro CLI is an open-source, fully managed Airflow solution. It is the easiest and fastest way to set up and run Airflow locally. 
+
 > Ask Astro: <https://ask.astronomer.io/> is the Apache Airflow's AI language model. 
 {: .prompt-tip }
-
-Astro CLI is an open-source, fully managed Airflow solution. It is the easiest and fastest way to set up and run Airflow locally. 
 
 ### Prerequisites 
 
