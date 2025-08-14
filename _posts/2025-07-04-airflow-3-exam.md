@@ -21,20 +21,20 @@ Install Docker: <https://www.docker.com/>
 
 ### Install the Astro CLI
 
-`brew install astro` → install the Astro CLI
+Install the Astro CLI: `brew install astro`
 
-`astro version` → check that the installation was successful
+Check that the installation was successful: `astro version`
 
-`brew upgrade astro` → upgrade the Astro version
+Upgrade the Astro version: `brew upgrade astro`
 
-`brew uninstall astro` → uninstall Astro
+Uninstall Astro: `brew uninstall astro`
 
 ### Create an Astro project
 
 > See the full instruction: <https://www.astronomer.io/docs/astro/cli/get-started-cli>
 {: .prompt-tip }
 
-`astro dev init` → generate new project
+Generate new project: `astro dev init`
 
 All required project files will automatically be created. Most important are:
 
@@ -48,7 +48,7 @@ By default, Airflow timezone is set to UTC. This can be changed using the `AIRFL
 
 ### Run Airflow locally
 
-`astro dev start` → run the project locally
+Run the project locally: `astro dev start`
 
 This command spins up 5 Docker containers on your machine: postgres, api server, dag processor, scheduler and triggerer.
 
@@ -56,11 +56,11 @@ This command spins up 5 Docker containers on your machine: postgres, api server,
 
 After your project builds successfully, open the Airflow UI in your web browser at `https://localhost:8080/`.
 
-`astro dev restart` → restart the project
+Restart the project: `astro dev restart`
 
-`astro dev stop` → stop the project
+Stop the project: `astro dev stop`
 
-`astro dev kill` → delete the project with all metadata
+Delete the project with all metadata: `astro dev kill`
 
 ### Run Astro project from Visual Studio Code
 
@@ -84,42 +84,22 @@ To close the connection:
 
 ### Apache Airflow is a data orchestrator
 
-↳ It manages the process of moving data between various data tools. 
-
-↳ It coordinates and automates data flows across various tools and systems. 
-
-↳ It allows to programmatically author, schedule and monitor workflows.
+- It manages the process of moving data between various data tools.
+- It coordinates and automates data flows across various tools and systems.
+- It allows to programmatically author, schedule and monitor workflows.
 
 ### Brief orchestration / workflow management history
-1) Pre-unix era:
+#### Pre-unix era
+In the pre-Unix era, data processing was handled **manually through batch** jobs with simple scheduling. These processes were **prone to errors** and required constant operator intervention.
 
-↳ manual batch processing and scheduling
+#### Early computing
+With the arrival of early computing, **basic time-based scheduling** tools emerged — for example, **CRON** in Unix/Linux systems. Around the same time, commercial ETL tools like Informatica appeared, enabling automation of data workflows but at a high cost and with significant resource requirements.
 
-↳ error prone
+#### Data and open-source
+The next stage saw the growth of open-source data processing tools. Solutions like Luigi and Oozie became popular, enabling more complex data pipelines. However, many were tied to specific ecosystems (such as Hadoop), suffered from limited scalability, and required workflows to be defined in XML or configuration files, reducing flexibility.
 
-2) Early computing:
-
-↳ basic time-based scheduling (e.g. CRON for Linux)
-
-↳ rise of ETL tooling (e.g. Informatica) → expensive and resource intensive
-
-3) Data and open-source:
-
-↳ rise of tools like Luigi or Oozie
-
-↳ limitations: some tools working only with Hadoop ecosystem, limited scalability, XML or config files used to define workflows 
-
-4) Modern data orchestration:
-
-↳ Apache Airflow (2015)
-
-↳ open-source
-
-↳ pipelines as code in Python
-
-↳ integration with hundreds of external systems
-
-↳ time and event-based (data aware) scheduling 
+#### Modern data orchestration
+In the era of modern data orchestration, a major shift occurred in 2015 with the release of **Apache Airflow** — an **open-source platform** for defining **data pipelines as Python code**. Airflow supports both time-based and event-based (data-aware) scheduling and **integrates with hundreds of external systems**, making it one of the most widely adopted orchestration tools in the industry today.
 
 > Airflow is suitable only for batch processing (not streaming) but it can be used with Kafka.  
 {: .prompt-warning }
@@ -128,88 +108,66 @@ To close the connection:
 {: .prompt-warning }
 
 ## Topic 2: Airflow Concepts
+A **DAG (Directed Acyclic Graph)** represents a **single data pipeline** — a collection of tasks arranged to reflect their execution order. Directed means that when a DAG contains multiple tasks, each task must have at least one defined upstream or downstream dependency. Acyclic means the graph cannot contain loops — execution must always move forward.
 
-DAG = Directed Acyclic Graph → a single data pipeline
+A **Task** is the smallest unit of work within a DAG and is represented as a single node in the graph.
 
-Task → a single unit of work in a DAG → represented by a single node
-
-Operator → defines the work a task does → there are 900+ built-in operators
-
-directed => if multiple tasks exist, each must have at least one defined upstream or downstream task
-
-acyclic => there are no loops
+An **Operator** defines what work a task performs. Airflow offers more than 900 built-in operators, covering a wide range of actions — from running SQL queries to transferring files between systems.
 
 ### Core Airflow components
-
-Airflow has seven main components.
+Airflow is built around seven main components, each responsible for a specific part of the orchestration process.
 
 ![](/assets/img/airflow-3-exam/airflow-3-components.jpg)
 
 #### Metadata Database
-
-Used to store all metadata related to the Airflow instance. 
+Stores all metadata related to the Airflow instance, including DAG definitions, task states, and execution history.
 
 #### DAG File Processor 
-A dedicated process for retrieving and **parsing DAG files** from the `dags` folder. By default looks for new DAGs to parse **every 5 minutes**. 
-
-Serialized DAG file is written to Metadata Database.
+A dedicated process that scans the `dags` folder for new or updated DAG files (by default, every 5 minutes). It parses these files and writes the serialized DAG definitions into the Metadata Database.
 
 ####  Scheduler 
-Monitors and **schedules tasks** when the dependencies are met. 
+Continuously monitors the Metadata Database (default: every 5 seconds) to determine if any tasks are ready to run.
 
-↳ by default reads from the Metadata Database every 5 seconds to check if there are any tasks to run
-
-↳ creates and schedules Task Instance objects
-
-↳ designed to run as a persistent service (continuously run in the background for an extended period)
-
-↳ can be run on a single machine or distributed across multiple machines
-
-↳ multiple schedulers can run at the same time
-
-↳ once scheduler is started, it continues to run until explicitly stopped manually or by the system
+- Creates and schedules Task Instance objects.
+- Runs persistently in the background.
+- Can operate on a single machine or in a distributed setup.
+- Multiple schedulers can run simultaneously.
+- Once started, keeps running until explicitly stopped by a user or the system.
 
 #### API Server 
-API Server takes information from workers about **tasks statuses** and **updates the Metadata Database**.
+- Receives task status updates from workers and writes them to the Metadata Database.
+- Serves the Airflow UI (React-based).
 
-API Server also **serves the Airflow UI** (React-based).
-
-In Airflow 3, the flask-based Webserver and API logic from Airflow 2, was merged into a single API Server.
+In Airflow 3, the Flask-based webserver and API from Airflow 2 were merged into this single API Server.
 
 #### Executor 
-Defines **how tasks are executed and on which system**. 
-
-Pushes the Task Instance objects into Queue.
+Defines how and where (on which system) tasks are executed. Pushes Task Instance objects into the Queue for processing.
 
 #### Queue
-Holds the tasks that are ready to be executed and defines the **execution order**.
+Holds tasks that are ready to run and determines their execution order.
 
 #### Worker(s) 
-**Executes tasks**. Picks up Task Instance objects from the Queue and runs the code. 
-
-Communicates the Tasks statuses to the API Server. 
-
-There can be multiple workers. They can be put in a separate cluster. 
+- Picks up tasks from the Queue and runs the code.
+- Sends task status updates back to the API Server.
+- Can scale horizontally by running multiple workers workers on the same or separate clusters.
 
 ### Stages of running a DAG
 
-1) the DAG File Processor scans the `dags` directory for new files (by default every 5 minutes)
+1) **DAG discovery**: the DAG File Processor scans the `dags` directory for new or updated DAG files (default: every 5 minutes).
+   
+2) **Parsing & serialization**: when a new DAG is detected, it is parsed and serialized into the Metadata Database.
 
-2) after the DAG File Processor detects a new DAG, this DAG is parsed and serialized into the Metadata Database 
+3) **Scheduling**: the Scheduler checks the Metadata Database (default: every 5 seconds) to find DAGs that are ready to run.
 
-3) the Scheduler checks the Metadata Database (by default every 5 seconds) for DAGs that are ready to run
+4) **Queuing**: once a DAG is ready to run, its tasks are placed into the Executor's queue.
 
-4) once the DAG is ready to run, its tasks are put into the executor's queue
+5) **Task Assignment**: once a worker becomes available, it retrieves a task from the queue.
 
-5) once a worker is available, it will retrieve a task to execute from the queue 
-
-6) the worker executes the taks
+6) **Execution**: the worker runs the task code.
 
 
 ### Airflow providers
-Core capabilities of Airflow can be extended by installing additional packages called providers. 
-
-You can search for different providers on <https://registry.astronomer.io/>
+Core capabilities of Airflow can be extended by installing additional packages called providers. Providers are listed on <https://registry.astronomer.io/>
 
 ### Defining a DAG in Airflow
 
@@ -221,223 +179,118 @@ A DAG has 4 core parts:
 - the dependencies where the order of execution of the tasks is defined 
 
 There are 3 ways to declare a DAG:
+
 1) using the `@dag` decorator
+
 2) using the context manager (`with` statement)
-3) using the standard constructor
+
+3) using the standard constructor (old way, not recommended)
 
 #### Using the DAG decorator 
 
-Import the dag and task decorators:
-
 ```python
+# Import the dag and task decorators
 from airflow.sdk import dag, task
-```
 
-or
-
-```python
-from airflow.decorators import dag, task
-```
-
-Define any functions you need for your tasks:
-```python
+# Define any functions you need for your tasks
 def _task_a():
     print("Hello from task A")
 
 def _task_b():
     print("Hello from task B")
-```
 
-Define the DAG object:
-
-```python
+# Define the DAG object
 @dag(schedule=None)
 def my_dag_decorator():  # this will be the name (unique identifier) of the DAG 
+    # Define tasks (operators)
+    task_a = PythonOperator(task_id='a', python_callable=_task_a)
+    task_b = PythonOperator(task_id='b', python_callable=_task_b)
+
+# Define tasks dependencies
+task_a >> task_b  # task_a is called upstream, task_b is called downstream
+
+# Always call your dag function at the end of the file
+my_dag_decorator()
 ```
 
 As a best practice, keep the name od the DAG the same as the filename. 
 
-Define tasks (operators):
-
-```python
-    task_a = PythonOperator(task_id='a', python_callable=_task_a)
-    task_b = PythonOperator(task_id='b', python_callable=_task_b)
-```
-
-Define tasks dependencies:
-
-```python
-task_a >> task_b  # task_a is called upstream, task_b is called downstream
-```
-
-Always call your dag function at the end of the file:
-```python 
-my_dag_decorator()
-```
-
 The `@dag` decorator is a DAG factory – it returns a DAG object when called.
 
-Complete script:
-```python
-from airflow.sdk import dag, task
-
-
-def _task_a():
-    print("Hello from task A")
-
-def _task_b():
-    print("Hello from task B")
-
-
-@dag(schedule=None)
-def my_dag_decorator():  
-    task_a = PythonOperator(task_id='a', python_callable=_task_a)
-    task_b = PythonOperator(task_id='b', python_callable=_task_b)
-
-task_a >> task_b
-
-my_dag_decorator()
-```
 
 #### Using the context manager 
 
-Import the DAG object:
-
 ```python
-from airflow.sdk import DAG
-```
-
-Define any functions you need for your tasks:
-```python
-def _task_a():
-    print("Hello from task A")
-
-def _task_b():
-    print("Hello from task B")
-```
-
-Open a DAG context:
-
-```python
-with DAG(
-    dag_id="my_dag_context",
-    schedule=None
-):
-```
-
-Define tasks (operators):
-
-```python
-    task_a = PythonOperator(task_id='a', python_callable=_task_a)
-    task_b = PythonOperator(task_id='b', python_callable=_task_b)
-```
-
-Define tasks dependencies:
-
-```python
-task_a >> task_b
-```
-
-Complete script:
-```python
+# Import the DAG object
 from airflow.sdk import DAG
 
-
+# Define any functions you need for your tasks
 def _task_a():
     print("Hello from task A")
 
 def _task_b():
     print("Hello from task B")
 
-
+# Open a DAG context
 with DAG(
     dag_id="my_dag_context",
     schedule=None
 ):
+    # Define tasks (operators)
     task_a = PythonOperator(task_id='a', python_callable=_task_a)
     task_b = PythonOperator(task_id='b', python_callable=_task_b)
 
+# Define tasks dependencies
 task_a >> task_b
 ```
+
 
 #### Using the standard constructor (old way, not recommended)
 
-Import the DAG object:
-
 ```python
+# Import the DAG object
 from airflow.sdk import DAG
-```
 
-Define any functions you need for your tasks:
-```python
+# Define any functions you need for your tasks
 def _task_a():
     print("Hello from task A")
 
 def _task_b():
     print("Hello from task B")
-```
 
-Define the DAG object:
-
-```python
+# Define the DAG object
 my_dag_standard = DAG(
     dag_id="my_dag_standard",
     schedule=None
 )
-```
 
-Define tasks (operators):
-
-```python
+# Define tasks (operators)
 task_a = PythonOperator(task_id='a', python_callable=_task_a, dag=my_dag_standard)
 task_b = PythonOperator(task_id='b', python_callable=_task_b, dag=my_dag_standard)
+
+# Define tasks dependencies
+task_a >> task_b
 ```
 
 Note how you need to assign every task to your DAG.
 
-Define tasks dependencies:
-
-```python
-task_a >> task_b
-```
-
-Complete script:
-```python
-from airflow.sdk import DAG
-
-
-def _task_a():
-    print("Hello from task A")
-
-def _task_b():
-    print("Hello from task B")
-
-
-my_dag_standard = DAG(
-    dag_id="my_dag_standard",
-    schedule=None
-)
-
-task_a = PythonOperator(task_id='a', python_callable=_task_a, dag=my_dag_standard)
-task_b = PythonOperator(task_id='b', python_callable=_task_b, dag=my_dag_standard)
-
-task_a >> task_b
-```
-
 > Be careful to give unique names to all your DAGs. If two DAGs share the same name, Airflow will randomly parse one of them. 
 {: .prompt-danger }
+
 
 ### Mandatory and optional DAG parameters 
 
 #### `dag_id` 
 
-The only mandatory DAG parameter. It must be set explicitly when using the `DAG` class. If using the `@dag` decorator, the function name is used as the `dag_id` by default.
+The only mandatory DAG parameter. 
 
-There is a bunch of recommended but not required parameters. Their default values or behavior may differ based on the Airflow version and configuration. 
+- Must be set explicitly when using the `DAG` class.
+- If using the `@dag` decorator, the function name is used as the `dag_id` by default.
+
+While `dag_id` is the only required parameter, there are several recommended optional parameters. Their default values and behavior can vary depending on your Airflow version and configuration.
 
 #### `start_date` 
-
-The date at which the DAG starts being scheduled (also: the timestamp from which the scheduler will attempt to backfill).
+Specifies when the DAG should begin scheduling. Also determines the earliest timestamp from which the scheduler will attempt backfilling.
 
 ```python 
 from pendulum import datetime
@@ -448,18 +301,17 @@ from pendulum import datetime
 ```
 
 #### `schedule` 
+Defines how often the DAG runs. Common values include:
 
-How often the DAG runs. Some of the most commonly used schedules are:
+- `None` → no schedule; the DAG must be triggered manually (via UI, API or CLI)
 
-`None` → don't schedule, the DAG will have to be run manually (through UI, API or CLI)
+- `@daily` → run once per day at midnight
 
-`@daily` → run every day at midnight
+- `@continuous` → run immediately after the previous run finishes (note: this is **not** real-time processing)
 
-`@continuous` → run as soon as the previous DAG run finishes (note: this is **not** real-time processing)
+📄 Reference: <https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/cron.html#cron-presets>
 
-<https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/cron.html#cron-presets>
-
-Use `duration` object to schedule the DAG to run every `x` days, e.g. run every 3 days:
+You can also use a `duration` object to schedule runs at fixed intervals. Example — run every 3 days:
 
 ```python 
 from pendulum import duration 
@@ -469,17 +321,19 @@ from pendulum import duration
     ...)
 ```
 
-If a `schedule` is set for a DAG, the `start_date` becomes mandatory.
+If `schedule` is set, the `start_date` becomes mandatory.
 
 #### `catchup` 
+Controls whether the scheduler should run all missed DAG runs from the past (since the `start_date`).
 
-If you set `catchup=True` the scheduler will run all non-triggered DAG runs from the past (since the `start_date`).
+- `catchup=True` → scheduler backfills all non-triggered runs
 
-From Airflow 3, the default behavior is `CATCHUP_BY_DEFAULT=False`. This parameter can be changed globally or at the DAG level. 
+- From Airflow 3, the default is `CATCHUP_BY_DEFAULT = False`
+
+- Can be set globally or per DAG
 
 ### `default_args`
-
-These are the arguments that will be passed to all tasks in a DAG. They can be overriden at the task level. They are defined in a dictionary, e.g.:
+Arguments applied to all tasks within a DAG (can be overridden at the task level). Defined as a dictionary:
 
 ```python
 default_args={
@@ -489,28 +343,27 @@ default_args={
 ```
 
 ### DAG Runs
+A DAG Run is a single execution instance of a DAG. Every time the DAG is triggered — whether manually or via its schedule — a new DAG Run object is created.
 
-A DAG Run object is an instance of a DAG. Any time the DAG is executed, a DAG Run is created.
+Key DAG Run properties:
 
-DAG Run properties:
-
-- `run_id` → unique ID of a DAG Run
-- `data_interval_start`
-- `logical_date`
-- `data_interval_end`
+- `run_id` → a unique identifier of a DAG Run
+- `data_interval_start` → the start of the data interval the DAG Run covers
+- `logical_date` → the logical execution date of the DAG Run (often the same as `data_interval_start`)
+- `data_interval_end` → the end of the data interval the DAG Run covers
 
 Possible DAG Run states:
 
-- `queued`
-- `running`
-- `success` / `failed`
+- `queued` → waiting to start
+- `running` → currently executing tasks
+- `success` / `failed` → completed with or without errors
 
-> By default, 16 DAG Runs of the same DAG can run at the same time. 
+> By default, up to 16 DAG Runs of the same DAG can run simultaneously. 
 {: .prompt-info }
 
-Active DAGs → unpaused, ready to be scheduled 
+Active DAGs → unpaused DAGs that are ready to be scheduled.
 
-Running DAGs → currently running
+Running DAGs → DAGs that currently have at least one active DAG Run in progress.
 
 ## Topic 3: Dependencies
 
