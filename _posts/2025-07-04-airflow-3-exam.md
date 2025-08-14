@@ -280,7 +280,7 @@ Note how you need to assign every task to your DAG.
 
 ### Mandatory and optional DAG parameters 
 
-#### `dag_id` 
+#### dag_id
 
 The only mandatory DAG parameter. 
 
@@ -289,7 +289,7 @@ The only mandatory DAG parameter.
 
 While `dag_id` is the only required parameter, there are several recommended optional parameters. Their default values and behavior can vary depending on your Airflow version and configuration.
 
-#### `start_date` 
+#### start_date
 Specifies when the DAG should begin scheduling. Also determines the earliest timestamp from which the scheduler will attempt backfilling.
 
 ```python 
@@ -300,7 +300,7 @@ from pendulum import datetime
     ...)
 ```
 
-#### `schedule` 
+#### schedule
 Defines how often the DAG runs. Common values include:
 
 - `None` → no schedule; the DAG must be triggered manually (via UI, API or CLI)
@@ -323,7 +323,7 @@ from pendulum import duration
 
 If `schedule` is set, the `start_date` becomes mandatory.
 
-#### `catchup` 
+#### catchup
 Controls whether the scheduler should run all missed DAG runs from the past (since the `start_date`).
 
 - `catchup=True` → scheduler backfills all non-triggered runs
@@ -332,7 +332,7 @@ Controls whether the scheduler should run all missed DAG runs from the past (sin
 
 - Can be set globally or per DAG
 
-### `default_args`
+### default_args
 Arguments applied to all tasks within a DAG (can be overridden at the task level). Defined as a dictionary:
 
 ```python
