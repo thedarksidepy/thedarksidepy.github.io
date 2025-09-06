@@ -9,7 +9,6 @@ Selecting the right Snowflake warehouse size is a balance between query performa
 
 Snowflake warehouse is a **cluster of computational resources** used for running queries and tasks. It functions as an on-demand resource, separate from any data storage system. Each size (X-Small, Small, Medium, etc.) doubles the compute power of the previous one and costs twice as much. 
 
-{: .important } 
 All warehouses, regardless of size, are **charged based on the amount of time they are running, whether actively processing queries or waiting for one to be issued**. 
 
 Snowflake charges **a minimum of 60 seconds per query** on a running or resized warehouse. Even if a query runs for only a few seconds, the user will be charged for a full minute of usage.
