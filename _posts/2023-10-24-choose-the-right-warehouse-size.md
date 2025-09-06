@@ -1,14 +1,13 @@
 ---
-title: Choose The Right Warehouse Size
+title: Choosing the right Snowflake warehouse size
 author: thedarkside
 date: 2023-10-24 00:00:00 +0100
 categories: [Snowflake]
 tags: [Snowflake]
 ---
+Selecting the right Snowflake warehouse size is a balance between query performance and cost. This guide explains how warehouse sizing works, how to start small, when to scale, and what metrics help you decide.
 
-Snowflake warehouse size impacts **costs** and **query performance**. 
-
-Snowflake warehouse is a **cluster of computational resources** used for running queries and tasks. It functions as an on-demand resource, separate from any data storage system, and is similar to a virtual machine (VM).
+Snowflake warehouse is a **cluster of computational resources** used for running queries and tasks. It functions as an on-demand resource, separate from any data storage system. Each size (X-Small, Small, Medium, etc.) doubles the compute power of the previous one and costs twice as much. 
 
 {: .important } 
 All warehouses, regardless of size, are **charged based on the amount of time they are running, whether actively processing queries or waiting for one to be issued**. 
@@ -38,29 +37,21 @@ Both the number of nodes and the cost **double** with each increase in warehouse
 ## Steps to effectively right-size the virtual warehouse:
 
 ### Start small and scale up as needed
+Always begin with the smallest warehouse. Scale up if:
 
-Until you find the sweet spot of maximum performance at the lowest cost. 
+- Queries queue frequently.
 
-If the cost of running the warehouse doubles with each increase in size, then you would ideally want the query execution time to be at least halved to justify the increased cost from a performance standpoint. 🤔
-    
-$$\Rightarrow$$ Choose the size that offers the best cost-to-performance ratio. 🤔
+- Execution times remain too long.
 
-### Automate Warehouse Suspension + Resumption
+- You see memory spill (data spilled to local or remote disk).
 
-To strike a balance between performance and cost, it is suggested to use a 60-second auto-suspend instead of the default 600 seconds? ❌
+Scaling up makes sense only if the larger warehouse is at least twice as fast, since cost doubles each step. Choose the size that offers the best cost-to-performance ratio.
 
-That depends because...
+### Automate Warehouse Suspension and Resumption
 
-{: .important } 
-Stopping and restarting warehouses within the first minutes leads to multiple charges because the one-minute minimum charge applies each time you restart.
+By default, Snowflake suspends warehouses after 600 seconds of inactivity. Lowering this to 60 seconds often reduces cost, but consider the trade-off: suspending a warehouse clears its local cache. Therefore, if there are repeating queries that scan the same tables, setting the warehouse auto-suspend too small will lead to a drop in performance.
 
-After a minute’s usage, all subsequent usage resumes on a per-second billing as long as your run the virtual warehouses continuously.
-
-And also...
-
-Note that when a warehouse suspends, its local cache gets cleared. Therefore, if there are repeating queries that scan the same tables, setting the warehouse auto-suspend too small will lead to a drop in performance.
-
-### Check if the warehouse is under or over provisioned
+### Signs of Under- or Over-Provisioning
 
 An under-provisioned Snowflake warehouse may not have sufficient resources to handle the workload, leading to sluggish query performance and potential bottlenecks. To identify under-provisioning, monitor performance indicators such as **query execution time**, **queue time**, and **the number of queued queries**. If these metrics consistently show poor performance, increasing the warehouse size to allocate more resources may be necessary.
 
@@ -72,14 +63,30 @@ It's crucial to monitor both local and remote disk spillage. In Snowflake, **whe
 To decrease the impact of spilling, the following steps can be taken:
 
 - Increase the size of the warehouse, which provides more memory and local disk space.
-- Review the query for optimization, especially if it's new query.
+- Review the query for optimization, especially if it's a new query.
 - Reduce the amount of data processed, such as improving partition pruning or projecting only the needed columns.
 - Decrease the number of parallel queries running in the warehouse.
 
 ### Determine optimal costs and performance (find the sweet spot)
 
-To achieve the optimal balance between performance and cost, start with an X-SMALL warehouse and gradually scale it up until the query duration stops halving. This indicates that the warehouse resources are fully utilized and helps you identify the sweet spot of maximum performance at the lowest cost.
+To achieve the optimal balance between performance and cost, start with an X-Small warehouse and gradually scale up until the query duration stops halving. This indicates that the warehouse resources are fully utilized and helps you identify the sweet spot of maximum performance at the lowest cost.
 
 ### Review Snowflake query history for errors
 
 Look out for error messages such as **"Warehouse full"** or **"Insufficient credit"**, which can indicate that the warehouse is unable to accommodate the query workload.
+
+### Summary
+
+1. Start with the smallest warehouse.
+
+2. Scale up only when metrics show consistent queuing, long execution times, or memory spill.
+
+3. A larger warehouse must deliver at least 2x speedup to justify its cost.
+
+4. Adjust auto-suspension to minimize idle charges, but balance against cache benefits.
+
+5. Monitor queue time, execution time, and spill metrics to guide decisions.
+
+6. Consider micropartition usage and concurrency patterns before resizing further.
+
+Right-sizing warehouses is an iterative process and requires monitoring and gradual adjustments.
