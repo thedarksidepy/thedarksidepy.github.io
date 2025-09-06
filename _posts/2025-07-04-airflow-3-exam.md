@@ -1,5 +1,5 @@
 ---
-title: Apache Airflow 3 Fundamentals – Certification Exam
+title: Apache Airflow 3 Fundamentals – Exam Prep Notes
 author: thedarkside
 date: 2025-07-04 00:00:00 +0100
 categories: [Apache Airflow]
