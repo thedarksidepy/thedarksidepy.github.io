@@ -12,7 +12,8 @@ Snowflake warehouse is a **cluster of computational resources** used for running
 {: .important } 
 All warehouses, regardless of size, are **charged based on the amount of time they are running, whether actively processing queries or waiting for one to be issued**. 
 
-_Snowflake charges **a minimum of 60 seconds per query** on a running or resized warehouse. Even if a query runs for only a few seconds, the user will be charged for a full minute of usage. Also, Snowflake offers **serverless compute** and **cloud service compute**, which have different credit structures._
+Snowflake charges **a minimum of 60 seconds per query** on a running or resized warehouse. Even if a query runs for only a few seconds, the user will be charged for a full minute of usage.
+{: .prompt-warning }
 
 The number of nodes available for a query:
 
@@ -29,10 +30,7 @@ The number of nodes available for a query:
 | 5XL            | 256             | 256  | 0.0711  |
 | 6XL            | 512             | 512  | 0.1422  |
 
-**Each node has 8 cores/threads**, irrespective of the cloud provider.
-
-{: .important } 
-Both the number of nodes and the cost **double** with each increase in warehouse size.
+**Each node has 8 cores/threads**, irrespective of the cloud provider. Both the number of nodes and the cost **double** with each increase in warehouse size.
 
 ## Steps to effectively right-size the virtual warehouse:
 
