@@ -6,10 +6,11 @@ categories: [Python]
 tags: [Python]
 ---
 
-Text processing and manipulation are often critical in the process of data cleansing and preparation. Machine learning models which use such data include _sentiment analysis of social media, language translations, filtering spam messages, parsing and extracting data from websites_ and many more. Regular expressions allow for these tasks to be completed way faster and more efficiently.  
+Text processing and manipulation are essential steps in data cleaning and preparation. Machine learning models that rely on text — such as _sentiment analysis, language translation, spam filtering,_ or _data extraction from web pages_ — depend heavily on these techniques. Regular expressions make these operations faster and more efficient, enabling complex text transformations with minimal code.  
   
-## Basic String Methods {#basic-string-methods}
-Python recognizes any sequence of characters placed inside quotes as a string object. A string variable can be defined using either single quotes (`'example'`) or double quotes (`"example"`). Both are equivalent and can be used interchangeably. However, if you want to place a literal quote inside the string, you need to enclose it (the string) in the other type of quote, e.g.:
+## Basic String Methods
+
+Python treats any sequence of characters enclosed in quotes as a **string object**. Strings can be defined using either single quotes (`'example'`) or double quotes (`"example"`). Both are equivalent, but when a quote character appears inside a string, you need to alternate the delimiters:
 
 ```python
 print('This isn't going to work')
@@ -21,7 +22,6 @@ print('This isn't going to work')
 SyntaxError: invalid syntax
 ```
 
-<br>
 ```python
 print("But this isn't going to cause any problems!")
 ```
@@ -29,8 +29,7 @@ print("But this isn't going to cause any problems!")
 But this isn't going to cause any problems!
 ```
 
-<br>
-You can also use triple quotes (`'''` or `"""`) to create a multi-line string.
+Use triple quotes (`'''` or `"""`) to create multi-line strings:
 
 ```python
 print('''This is a
@@ -43,9 +42,9 @@ multi-line
 string
 ```
 
-<br>
-#### Length of a string {#length-of-a-string}
-`len()` function is used to determine the number of items in a collection. In case of a string it returns the number of characters. You can also use `len()` function on other collection data types like list, dict, tuple etc. 
+### Length of a string
+
+The built-in `len()` function returns the number of items in a collection. For strings, it gives the number of characters. You can also use `len()` function on other collection types like list, dict, tuple etc. 
 
 ```python
 my_string = 'I wonder how many characters are in this string...'
@@ -55,9 +54,8 @@ len(my_string)
 50
 ```
 
-<br>
-#### Concatenation {#concatenation}
-There are several string concatenation methods in Python.
+### Concatenation 
+Python supports several ways to concatenate (combine) strings.
 
 1. Using the `+` operator.
 
@@ -72,7 +70,7 @@ There are several string concatenation methods in Python.
     some random words
     ```
 
-2. Using the `+=` operator:
+2. Using the `+=` operator to append:
 
     ```python
     str_1 = 'some '
@@ -88,7 +86,7 @@ There are several string concatenation methods in Python.
     some random words
     ```
 
-3. Using the `join()` method:
+3. Using the `join()` method — useful when joining multiple strings from an iterable:
 
     ```python
     str_1 = 'some '
@@ -127,25 +125,22 @@ There are several string concatenation methods in Python.
     some random words
     ```
 
-<br>
-#### Slicing {#slicing}
-You can use slicing in Python to extract a specific character or a group of characters from a string. The syntax is as follows: `string[start:stop:stride]`.
+### Slicing
+Slicing extracts parts of a string using the syntax: `string[start:stop:step]`
 
-`start` is the index of the first character you want to include in the slice (default is 0).
+- `start` - index of the first character to include (default: 0)
+- `stop` — index of the first character to exclude (default: string’s length)
+- `step` - number of characters to skip after each selection (default: 1)
 
-`stop` is the index of the first character you want to exclude from the slice (default is the length of the string).
-
-`step` is the number of characters to move forward after each character is selected (default is 1).
-
-You can use negative indices to count from the end of the string. A specific example is reversing the entire string.
+Negative indices count from the end of the string. For example, reversing a string is done by using `[::-1]`.
 
 ```python
 my_string = 'fantastic'
-print(my_string[0]) # first character
-print(my_string[1:4]) # some middle characters
-print(my_string[-1]) # last character
-print(my_string[::2]) # every second character
-print(my_string[::-1]) # reversed string
+print(my_string[0])      # first character
+print(my_string[1:4])    # some middle characters
+print(my_string[-1])     # last character
+print(my_string[::2])    # every second character
+print(my_string[::-1])   # reversed string
 ```
 ```
 f
@@ -155,19 +150,18 @@ fnatc
 citsatnaf
 ```
 
-<br>
-#### String capitalization {#string-capitalization}
-There are several string capitalization methods in Python.
+### String capitalization
+Python provides several methods for changing the capitalization of strings:
 
-1. `upper()` - converts all characters in a string to uppercase.
+1. `upper()` - converts all characters to uppercase
 
-2. `lower()` - converts all characters in a string to lowercase.
+2. `lower()` - converts all characters to lowercase
 
-3. `capitalize()` - converts the first character of a string to uppercase and the rest to lowercase.
+3. `capitalize()` - capitalizes the first character only
 
-4. `title()` - converts the first letter of each word in a string to uppercase and the rest to lowercase.
+4. `title()` - capitalizes the first letter of each word
 
-5. `swapcase()` - swaps the case of all characters in a string (uppercase to lowercase and vice versa).
+5. `swapcase()` - inverts the case of all letters
 
 ```python
 my_string = 'whAT HaPPened to THESE leTTerS?'
@@ -185,23 +179,22 @@ What Happened To These Letters?
 WHat hAppENED TO these LEttERs?
 ```
 
-<br>
-#### Split methods {#split-methods}
-There are several ways to split a string in Python.
+### Split methods
+Python offers multiple ways to split strings into smaller parts:
 
-1. `split()` - splits a string into a list of substrings using a specified delimiter. If no delimiter is specified, it splits the string on whitespace characters (space, tab, newline, etc.).
-
-2. `rsplit()` - same as `split()` but starts splitting from the right.
-
-3. `splitlines()` - splits a string into a list of substrings at newline characters.
-
-4. `partition()`- returns a tuple that contains the part before the specified separator, separator itself and the part after the separator.
+1. `split()` – divides a string into a list of substrings using a specified delimiter. If no delimiter is given, it defaults to any whitespace character (spaces, tabs, newlines).
+2. `rsplit()` – behaves like `split()` but starts splitting from the right.
+3. `splitlines()` – splits a string at newline characters, returning a list of lines.
+4. `partition()` – splits a string at the first occurrence of a specified separator and returns a **tuple** containing:
+   - the part before the separator,  
+   - the separator itself, and  
+   - the part after.
 
     ```python
     my_string = '''This string 
     should be split 
     into separate parts'''
-
+    
     print(my_string.split())
     print(my_string.rsplit())
     print(my_string.splitlines())
@@ -214,21 +207,16 @@ There are several ways to split a string in Python.
     ('This', ' ', 'string \nshould be split \ninto separate parts')
     ```
 
-5. `re.split()` - splits a string into a list of substrings using a regular expression as the delimiter. This method requires the re module to be imported. Examples will follow later in this tutorial.
+5. `re.split()` -– splits a string using a **regular expression** as the delimiter. This requires importing the `re` module. Examples will appear later in the tutorial.
 
-<br>
-#### Remove whitespace {#remove-whitespace}
-There are several ways to remove whitespace (spaces, tabs, newlines, etc.) from a string in Python:
+### Remove whitespace
+To remove spaces, tabs, or newlines, Python provides several methods:
 
-1. `strip()` - removes leading and trailing whitespace from a string.
-
-2. `lstrip()` - removes leading (left) whitespace from a string.
-
-3. `rstrip()` - removes trailing (right) whitespace from a string.
-
-4. `replace(' ', '')` - replaces all occurrences of a specified string (in this case, a single space) with another string (in this case, an empty string).
-
-5. `' '.join(string.split())` - this method uses `split()` to split the string into a list of substrings using whitespace characters as the delimiter, then `join()` method to join the substrings back into a single string with a single whitespace.
+1. `strip()` - removes both leading and trailing whitespace
+2. `lstrip()` - removes leading (left) whitespace only
+3. `rstrip()` - removes trailing (right) whitespace only
+4. `replace(' ', '')` – removes all spaces by replacing them with an empty string
+5. `' '.join(string.split())` – splits and rejoins text to normalize spacing (=> single space only)
 
 ```python
 my_string = '   There is way too   much  whitespace here.     '
@@ -247,8 +235,7 @@ Thereiswaytoomuchwhitespacehere.
 There is way too much whitespace here.
 ```
 
-<br>
-#### Replace methods {#replace-methods}
+### Replace methods {#replace-methods}
 
 There are several ways to replace strings in Python.
 
