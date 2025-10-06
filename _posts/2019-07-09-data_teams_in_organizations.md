@@ -8,15 +8,15 @@ tags: [DataScience, MachineLearning, AI, DataEngineering, BusinessIntelligence]
 
 ---
 
-# Data Science: Turning Data Into Insights
+## Data Science: Turning Data Into Insights
 
 Data Science is all about extracting insights from data. It's about uncovering hidden information that helps organizations make smarter decisions. In a world overflowing with data, the ability to translate business questions into data-driven answers has become incredibly valuable.
 
-# What Can Data Do?
+## What can Data do?
 
 Data can describe the state of an organization or a process at a given moment through reports, dashboards, and alerts. It can help determine the cause of events and behaviors by identifying correlations and causal relationships. With machine learning models, data can predict future outcomes.
 
-# The Data Science Workflow
+## The Data Science Workflow
 
 Every data science project begins with data collection, which can be primary or secondary. Secondary data are already gathered and available from existing sources. Primary data are newly collected - either through qualitative methods (interviews, surveys, focus groups) or quantitative methods (numerical measurements, experiments). The next stage is data visualization and exploration where analysts create dashboards to inspect data trends or compare datasets. Finally, machine learning models are built on the processed data to generate predictions and drive decisions.
 
@@ -36,7 +36,7 @@ Throughout this workflow, teams often track progress using OKRs (Objectives and 
 
   * KR1: Implement a regression model to forecast key client purchases
 
-# Applications Of Data Science
+## Applications Of Data Science
 
 Data Science has countless real-world applications. Traditional **machine learning models** can detect fraudulent credit card transactions, predict customer churn, categorize customers into groups, and personalize product recommendations.
 
@@ -44,11 +44,11 @@ The **Internet of Things (IoT)** adds another layer – smart devices like weara
 
 **Deep learning** handles massive datasets that traditional ML can't. These multi-layer neural networks power technologies such as image recognition for self-driving cars and advanced speech recognition.
 
-# Data Science Team Roles
+## Data Science Team Roles
 
-#### Data Engineer
+### Data Engineer
 
-##### Toolkit: SQL / NoSQL + Python / Java / Scala
+#### Toolkit: SQL / NoSQL + Python / Java / Scala
 
 Data engineers design and build systems for storing and processing data. They extract data from sources (websites, APIs, customer databases, transactions) and prepare it for analysis. They may also handle pseudonymization – replacing personally identifiable information (PII) with artificial identifiers for security.
 
@@ -64,21 +64,21 @@ External data sources include **APIs**, **public datasets**, and **crowdsourced 
 
 Because businesses generate massive volumes of data, they rely on distributed or cloud storage systems like AWS, Azure, or Google Cloud. Different data formats call for different storage solutions. Structured (tabular) data are stored in SQL databases, while unstructured data like text, images, video, or audio, are stored in NoSQL systems.
 
-#### Data Analyst
+### Data Analyst
 
-##### Toolkit: SQL / NoSQL + Spreadsheets + BI Tools (Tableau, Power BI, Looker)
+#### Toolkit: SQL / NoSQL + Spreadsheets + BI Tools (Tableau, Power BI, Looker)
 
 Data analysts explore and summarize data through statistical analysis, hypothesis testing, and visualization. They transform data into insights, often through interactive dashboards, using Business Intelligence (BI) tools.
 
-#### Dashboards
+### Dashboards
 
 Dashboards are visual collections of metrics updated in real-time or on a schedule. These include time series plots, bar charts, or single-number highlights (e.g. website visitors). 
 
-#### Ad-Hoc Requests
+### Ad-Hoc Requests
 
 Analysts also handle ad-hoc requests from teams, which are best tracked using tools like JIRA, Trello, or Asana for clarity and accountability. Such requests should be specific, provide context, and include a priority and due date. 
 
-#### A/B Testing
+### A/B Testing
 
 A/B testing is a randomized experiment comparing two options (A vs B) to see which performs better. It's often used for website changes, new app features, or e-mail campaigns. Key steps of A/B tests are:
 
@@ -87,9 +87,9 @@ A/B testing is a randomized experiment comparing two options (A vs B) to see whi
 * running the tests,
 * checking for statistical significance to see if the difference is real or random.
 
-#### Machine Learning Engineer
+### Machine Learning Engineer
 
-##### Toolkit: Python / R
+#### Toolkit: Python / R
 
 Machine learning engineers build predictive models using historical data – these include prediction, classification, image processing, text analysis, and more.
 
@@ -107,6 +107,6 @@ Natural Language Processing (NLP) handles text data such as reviews or tweets, e
 
 Deep Learning is a branch of Machine Learning that uses neural networks to tackle complex problems like image recognition or speech processing. These models can be powerful but opaque, so the field of Explainable AI (XAI) works to make their decisions more interpretable.
 
-# Conclusion
+## Conclusion
 
 From dashboards to deep learning, data science ties together technology, statistics, and human insight to turn raw data into action. As data keeps expanding in scale and importance, so does the value of those who can make sense of it. When data engineers, analysts, and machine learning specialists work together, they create a continuous loop of learning that drives better decisions across the organization.
