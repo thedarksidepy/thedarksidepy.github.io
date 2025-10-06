@@ -70,15 +70,15 @@ Because businesses generate massive volumes of data, they rely on distributed or
 
 Data analysts explore and summarize data through statistical analysis, hypothesis testing, and visualization. They transform data into insights, often through interactive dashboards, using Business Intelligence (BI) tools.
 
-### Dashboards
+#### Dashboards
 
 Dashboards are visual collections of metrics updated in real-time or on a schedule. These include time series plots, bar charts, or single-number highlights (e.g. website visitors). 
 
-### Ad-Hoc Requests
+#### Ad-Hoc Requests
 
 Analysts also handle ad-hoc requests from teams, which are best tracked using tools like JIRA, Trello, or Asana for clarity and accountability. Such requests should be specific, provide context, and include a priority and due date. 
 
-### A/B Testing
+#### A/B Testing
 
 A/B testing is a randomized experiment comparing two options (A vs B) to see which performs better. It's often used for website changes, new app features, or e-mail campaigns. Key steps of A/B tests are:
 
