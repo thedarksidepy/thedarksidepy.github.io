@@ -1,110 +1,112 @@
 ---
 
-title: Data teams in organizations
+title: Data Teams In Organizations
 author: thedarkside
 date: 2019-07-09 00:00:00 +0100
-categories: [other]
-tags: [other]
+categories: [Data Engineering]
+tags: [DataScience, MachineLearning, AI, DataEngineering, BusinessIntelligence]
 
 ---
 
-Data Science is all about gathering findings from data. It's about uncovering hidden information that allows businesses to make better decisions. Data translates business questions into data-driven answers. Today data is everywhere, and it's incredibly valuable.
+# Data Science: Turning Data Into Insights
 
-# So what exactly can data do?
+Data Science is all about extracting insights from data. It's about uncovering hidden information that helps organizations make smarter decisions. In a world overflowing with data, the ability to translate business questions into data-driven answers has become incredibly valuable.
 
-Data can describe the state of an organization or a process at a given time using reporting like dashboards or alerts. It can determine the cause of events and behaviors. With data science techniques, we can examine the correlation between events and complex causal relationships. Finally, machine learning models can help predict the outcomes of future events.
+# What Can Data Do?
 
-# The Data Science workflow
+Data can describe the state of an organization or a process at a given moment through reports, dashboards, and alerts. It can help determine the cause of events and behaviors by identifying correlations and causal relationships. With machine learning models, data can predict future outcomes.
 
-Every data science project starts with data collection. Data collection methods can be divided into primary and secondary. Secondary data are data already gathered and obtainable from existing sources. Primary data are those yet to be collected, either through qualitative or quantitative methods. Qualitative methods include non-quantifiable data such as feelings, words, and emotions, gathered through interviews, surveys, or focus groups. Quantitative data can be represented mathematically and analyzed with numeric methods.
+# The Data Science Workflow
 
-The next step is data visualization and exploration. This involves building dashboards for visual inspection of data over time or for comparison of different datasets.
+Every data science project begins with data collection, which can be primary or secondary. Secondary data are already gathered and available from existing sources. Primary data are newly collected - either through qualitative methods (interviews, surveys, focus groups) or quantitative methods (numerical measurements, experiments). The next stage is data visualization and exploration where analysts create dashboards to inspect data trends or compare datasets. Finally, machine learning models are built on the processed data to generate predictions and drive decisions.
 
-Finally, appropriately processed data is used for making predictions. This is when actual machine learning models are created.
+Throughout this workflow, teams often track progress using OKRs (Objectives and Key Results), for example:
 
-At each stage of the workflow, various OKRs (Objectives/Key Results) may appear. For example:
+* Data Collection Objective: Improve Data Warehousing
 
-Data collection objective: Improve Data Warehousing
+  * KR1: Limit external data import time to 12 hours
+  * KR2: Reduce import errors via automated testing
 
-* KR 1: Limit the time needed to import data from an external source to 12h
-* KR 2: Decrease the number of reported data import errors by implementing automatic tests
+* Visualization & Exploration objective: Make Company Results Transparent
 
-Visualization & Exploration objective: Make Company Results Reporting Transparent
+  * KR1: Build a Tableau dashboard for monthly revenues and losses
+  * KR2: Send automated newsletter tracking monthly performance
 
-* KR 1: Build a Tableau dashboard showing monthly revenues and losses
-* KR 2: Prepare an automatic newsletter tracking monthly revenues and losses
+* Prediction Model Objective: Increase Revenue from Key Client
 
-Prediction model objective: Increase Revenue from Key Client
+  * KR1: Implement a regression model to forecast key client purchases
 
-* KR 1: Implement a linear regression model to estimate the value of Key Client purchases based on historical data
+# Applications Of Data Science
 
-# Applications of Data Science
+Data Science has countless real-world applications. Traditional **machine learning models** can detect fraudulent credit card transactions, predict customer churn, categorize customers into groups, and personalize product recommendations.
 
-There are three main areas where data science is used. **Traditional machine learning models** can detect fraudulent credit card transactions, predict customer churn, categorize customers into groups, and adjust purchase recommendations.
+The **Internet of Things (IoT)** adds another layer – smart devices like wearables, home automation systems, and voice assistants constantly generate and transmit valuable data.
 
-Another category is the **Internet of Things (IoT)**, meaning gadgets that are not standard computers but still transmit data—for example, smart watches monitoring physical activity, home automation devices (lighting, air conditioning, security systems), or voice-controlled home assistants.
+**Deep learning** handles massive datasets that traditional ML can't. These multi-layer neural networks power technologies such as image recognition for self-driving cars and advanced speech recognition.
 
-Lastly, **deep learning** is used to draw conclusions from massive amounts of data that traditional machine learning cannot handle. These models use multiple layers of mini-algorithms ("neurons"). Applications include image recognition for autonomous driving systems.
-
-# Data Science Team Structure
+# Data Science Team Roles
 
 #### Data Engineer
 
 ##### Toolkit: SQL / NoSQL + Python / Java / Scala
 
-Data engineers build architectures for data storage and processing. They form the first step in the workflow by extracting data from sources and piping it for analysts to use. Common sources are websites, customer data, logistics data, and financial transactions. Engineers also perform transformations so data is *clean* and easy to analyze. They might be responsible for pseudonymization, a process where personally identifiable information (PII) is replaced with artificial identifiers and access is restricted to necessary groups.
+Data engineers design and build systems for storing and processing data. They extract data from sources (websites, APIs, customer databases, transactions) and prepare it for analysis. They may also handle pseudonymization – replacing personally identifiable information (PII) with artificial identifiers for security.
 
 #### External Data Sources
 
-Other sources include APIs, public records, and Mechanical Turk. An API (Application Programming Interface) is a way to request data from a third party. Examples include *Twitter, Wikipedia, Yahoo! Finance*, and *Google Maps*. Public data are gathered and shared by institutions and include information on health, economics, and demographics. Mechanical Turk (MTurk) is outsourcing simple validation tasks to large groups of people (crowdsourcing). The goal is to create a large enough labeled dataset for machine learning. Platforms offering this include *AWS MTurk*.
+External data sources include **APIs**, **public datasets**, and **crowdsourced platforms** like AWS Mechanical Turk.
+
+* An **API** (*Application Programming Interface*) enables requesting data from third parties such as *Twitter, Wikipedia, Yahoo! Finance*, or *Google Maps*.
+* **Public data** are gathered and shared by institutions and include health, economics, and demographics datasets.
+* **Mechanical Turk (MTurk)** involves outsourcing simple validation or labeling tasks to large groups of people (crowdsourcing). The goal is to create sufficiently large and accurately labeled datasets for machine learning.
 
 #### Data Storage Systems
 
-Businesses generate more data than a single computer can store. In such cases, parallel storage solutions are used, where data is distributed across many computers. A company might have its own cluster or use cloud storage services. Providers include *Microsoft Azure, Amazon Web Services (AWS)*, and *Google Cloud*.
-
-Different data types require different storage solutions and query languages. Tabular data (rows and columns) can be stored in relational databases accessed with SQL (Structured Query Language). Unstructured data, like text, images, video, and audio, are stored in document databases and queried mainly through NoSQL (Not Only SQL).
+Because businesses generate massive volumes of data, they rely on distributed or cloud storage systems like AWS, Azure, or Google Cloud. Different data formats call for different storage solutions. Structured (tabular) data are stored in SQL databases, while unstructured data like text, images, video, or audio, are stored in NoSQL systems.
 
 #### Data Analyst
 
 ##### Toolkit: SQL / NoSQL + Spreadsheets + BI Tools (Tableau, Power BI, Looker)
 
-Data analysts describe data through statistical analysis, hypothesis testing, and visualization. They use storage platforms developed by engineers to analyze and summarize data. They are often responsible for creating dashboards using Business Intelligence (BI) tools.
+Data analysts explore and summarize data through statistical analysis, hypothesis testing, and visualization. They transform data into insights, often through interactive dashboards, using Business Intelligence (BI) tools.
 
 #### Dashboards
 
-Dashboards are visual sets of metrics that update in real time or on a schedule. They may include time series plots, bar charts, or single-number highlights (e.g. website visitors). Tables and large text blocks are usually avoided. Tools include Excel, Google Sheets, Power BI, Tableau, Looker, or custom tools like R Shiny and d3.js. Dashboards should be standardized across the organization or project for consistency.
+Dashboards are visual collections of metrics updated in real-time or on a schedule. These include time series plots, bar charts, or single-number highlights (e.g. website visitors). 
 
 #### Ad-Hoc Requests
 
-Analysts may receive ad-hoc requests—unplanned, non-repetitive tasks from other departments. Such requests should be specific, provide context, and include a priority and due date. A good practice is to manage them through ticketing systems like Trello, JIRA, or Asana. Requests are then assigned internally to analytics team members.
+Analysts also handle ad-hoc requests from teams, which are best tracked using tools like JIRA, Trello, or Asana for clarity and accountability. Such requests should be specific, provide context, and include a priority and due date. 
 
 #### A/B Testing
 
-A/B testing is a randomized experiment for determining which of two options (A or B) performs better. It often concerns website changes, app features, or e-mail campaigns. Running an A/B test involves:
+A/B testing is a randomized experiment comparing two options (A vs B) to see which performs better. It's often used for website changes, new app features, or e-mail campaigns. Key steps of A/B tests are:
 
-* picking a metric to track (e.g. clicks),
+* selecting a metric to track (e.g. clicks),
 * calculating sample size (larger sizes detect smaller differences),
-* executing the experiment,
+* running the tests,
 * checking for statistical significance to see if the difference is real or random.
 
-#### Machine Learning Scientist
+#### Machine Learning Engineer
 
 ##### Toolkit: Python / R
 
-Machine learning analysis extrapolates what is likely to happen based on historical data. ML scientists use training data for predictions, classification, image processing, text analysis, and more.
+Machine learning engineers build predictive models using historical data – these include prediction, classification, image processing, text analysis, and more.
 
 #### Supervised vs Unsupervised Machine Learning
 
-Supervised learning uses features and labels. Examples: recommendation systems or churn prediction. Features are characteristics of observations (e.g. age, gender, income). Labels are the quantities to predict (e.g. churn).
+Supervised learning uses labeled data for prediction tasks, e.g. recommendation systems or churn prediction. Unsupervised learning groups data without labels, e.g. customer segmentation, image segmentation, and anomaly detection.
 
-Unsupervised learning does not use labels. For example, clustering groups data by patterns. Applications include customer segmentation, image segmentation, and anomaly detection.
-
-Model evaluation is key. A dataset is split into training and testing parts to check performance.
+Model performance is evaluated by splitting data into training and test sets.
 
 #### Natural Language Processing
 
-Natural Language Processing (NLP) covers ML problems where the dataset is text (reviews, e-mail subjects, tweets). Applications include sentiment classification or clustering medical records. Text usually must be tokenized into words. To handle synonyms, word embeddings group similar words.
+Natural Language Processing (NLP) handles text data such as reviews or tweets, enabling sentiment analysis or document classification through tokenization and word embeddings.
 
 #### Deep Learning
 
-Deep Learning (Neural Networks) is a branch of ML requiring more data but solving more complex problems. Predictions are often accurate but hard to interpret. Explainable AI addresses this by providing reasons for predictions alongside the outcomes.
+Deep Learning is a branch of Machine Learning that uses neural networks to tackle complex problems like image recognition or speech processing. These models can be powerful but opaque, so the field of Explainable AI (XAI) works to make their decisions more interpretable.
+
+# Conclusion
+
+From dashboards to deep learning, data science ties together technology, statistics, and human insight to turn raw data into action. As data keeps expanding in scale and importance, so does the value of those who can make sense of it. When data engineers, analysts, and machine learning specialists work together, they create a continuous loop of learning that drives better decisions across the organization.
