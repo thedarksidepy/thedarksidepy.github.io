@@ -1,9 +1,9 @@
 ---
-title:  Star and Snowflake schema
+title:  "Star vs Snowflake Schema – Choosing the Right Model"
 author: thedarkside
 date:   2023-02-15 00:00:00 +0000
-categories: [Data Modeling]
-tags: [datamodeling]
+categories: [Blog]
+tags: [DataModeling]
 ---
 
 Data warehousing is an essential part of modern businesses, where organizations store and analyze vast amounts of data. In this context, the way data is structured and organized is critical to ensure data integrity and effective analysis. Star and snowflake schema are two of the most common data structures used in data warehousing.
