@@ -2,8 +2,8 @@
 title: Host a static website on Amazon S3 in 5 minutes
 author: thedarkside
 date: 2020-07-13 00:00:00 +0100
-categories: [AWS]
-tags: [AWS]
+categories: [Tutorials]
+tags: [AWS, S3]
 ---
 
 Amazon S3 can be used to host a static website. For hosting dynamic websites, other AWS services can be used.
