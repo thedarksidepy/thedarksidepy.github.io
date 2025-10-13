@@ -2,10 +2,9 @@
 title: Solve gaps and islands problem in AWS Redshift
 author: thedarkside
 date: 2020-03-20 00:00:00 +0100
-categories: [SQL]
-tags: [SQL]
+categories: [Tutorials]
+tags: [SQL, AWS, Redshift]
 ---
-
 
 A gaps and islands problem refers to a situation where there is a **sequence of rows** in a table that should appear at some **regular intervals** (daily measures of temperature, weekly summary of sales, etc.) but **some entries are missing**. Although such an issue appears most often in the case of data ordered by a date or a timestamp, in general, it can be any sequence ordered by any other type of column which could be treated as a sequence of consecutive values (integers, alphabet letters and so on). Islands refer to chunks of sorted consecutive records and gaps are simply missing values between the islands. This might sound a little bit enigmatic but in reality, is very intuitive. If we have a dataset of some measures taken in March 2020 ordered by day and there are missing measures for the 10th and 24th of March (for whatever reason), the gaps and islands are as follows:
 
