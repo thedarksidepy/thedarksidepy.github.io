@@ -2,7 +2,7 @@
 title: Extract data from GitHub using Python and Airflow
 author: thedarkside
 date: 2023-01-31 00:00:00 +0000 
-categories: [Apache Airflow]
+categories: [Tutorials]
 tags: [Python, Airflow]
 ---
 
