@@ -1,54 +1,73 @@
 ---
-title: CTEs and temporary tables
+title: CTEs vs Temporary Tables
 author: thedarkside
 date: 2019-10-02 00:00:00 +0100
-categories: [SQL]
+categories: [Blog]
 tags: [SQL]
 ---
 
+## CTEs vs. Temporary Tables – Which One Should You Use?
+Both Common Table Expressions (CTEs) and temporary tables allow you to work with intermediate data inside a query, but they behave differently in scope, performance, and use cases. Understanding when to use each can make your SQL simpler — and sometimes faster.
 
-# Common Table Expressions
+## Common Table Expressions (CTEs)
+A **CTE (Common Table Expression)** is a named, temporary result set that exists only for the duration of a single SQL statement. You define it using the `WITH` clause, which can contain one or more comma-separated subqueries. Each subquery defines a logical result set that can be referenced later in the query.
 
-**CTEs (Common Table Expressions)** are named temporary result sets that can be referenced within a `SELECT`, `INSERT`, `UPDATE`, or `DELETE` statement. They are created using `WITH` clause with one or more comma-separated subclauses. Each subclause provides a subquery that produces a named result set.
-
-From Amazon Redshift documentation: `WITH` clause subqueries are an efficient way of defining tables that can be used throughout the execution of a single query. In all cases, the same results can be achieved by using subqueries in the main body of the SELECT statement, but `WITH` clause subqueries may be simpler to write and read. Where possible, `WITH` clause subqueries that are referenced multiple times are optimized as common subexpressions; that is, it may be possible to evaluate a `WITH` subquery once and reuse its results.
-
-The basic syntax for creating a CTE is as follows:
-
+Example syntax:
 
 ```sql
 WITH cte_name (column1, column2, ...) AS (
-SELECT ...
+  SELECT ...
 )
+SELECT ...
+FROM cte_name;
 ```
 
-After the keyword `WITH`, you specify the name of the CTE and the columns it will return. Then, after the keyword `AS`, you specify the query that defines the CTE.
+CTEs make complex queries easier to read and maintain by replacing repeated subqueries with a single definition. They can also reference themselves (recursive CTEs) and can be reused multiple times within the same statement.
 
-The `WITH` clause is a tool for materializing subqueries to avoid having to recompute them multiple times. A CTE can be referenced multiple times in the same query and can also be self-referencing. Besides making the query execution faster, subquery factoring also makes complex queries easier to read (especially when we get rid of multiple chunks of identical subqueries). Defining more than one CTE within a `WITH` statement can help simplify very complicated queries which are ultimately joined together.  
+In Amazon Redshift and most modern databases, `WITH` clause subqueries can be optimized internally so that repeated references to the same CTE don’t always trigger multiple evaluations. This depends on the optimizer and query complexity.
 
-The CTE is not stored as an object and the result set exists only throughout the query execution (it has an execution scope of a **single** SELECT, INSERT, UPDATE, or DELETE statement and cannot be reused after). It can be treated as a substitute for a view if you do not have permissions to create a view object or just do not want to create it.
+A few important notes:
+* The result set exists only for the duration of one query.
+* A CTE is not a stored object — it disappears immediately after execution.
+* It’s ideal when you need to simplify a query or organize logic without creating a physical table or view.
 
-_[Amazon Redshift Documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_WITH_clause.html)_
+*[Read more: Amazon Redshift documentation on the WITH clause](https://docs.aws.amazon.com/redshift/latest/dg/r_WITH_clause.html)*
 
-# Temporary Tables
+## Temporary Tables
+A **temporary table** physically exists for the duration of a session and is automatically dropped when the session ends. Temporary tables are stored in a session-specific schema (which users cannot specify) and can safely share a name with a permanent table without causing conflicts.
 
-**Temporary Tables** exist and hold data for the duration of a session and are automatically dropped at the end of it. Typically they are created so that they can be joined into a query later in the session.    
-
-A temporary table can have the same name as an existing permanent table (not recommended though). It is created in a separate, session-specific schema (schema name cannot be specified by a user). This schema then becomes the first schema in the search path, so the temporary table will take precedence over the permanent table unless you qualify the table name with the schema name to access the permanent table.
-
-The syntax for creating a temporary table is the same as for permanent tables with additional `TEMPORARY` or `TEMP` keyword.
+Example syntax:
 
 ```sql
-CREATE TEMPORARY | TEMP TABLE
-...
+CREATE TEMPORARY TABLE my_temp AS
+SELECT ...
+FROM source_table;
 ```
 
-Temporary tables are often used for **staging** raw or unprocessed data that will be used to make changes to the target table. They also allow for indexes and constraints which are not possible with CTEs.
+Key characteristics:
 
-_[Amazon Redshift Documentation](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html)_
+- Temporary tables persist for the entire session and can be used across multiple queries.
+- They can have indexes and constraints, which CTEs cannot.
+- Because they are materialized, they can be joined, updated, or queried repeatedly.
+- They are often used for staging, data transformations, or intermediate aggregations.
 
-# Which one to use?
+When a temporary table shares a name with a permanent one, the temporary table takes precedence in the current session’s search path (unless you explicitly qualify the permanent table’s schema).
 
-That depends on the specific use case. 
+*[Read more: Amazon Redshift documentation on CREATE TABLE](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_TABLE_NEW.html)*
 
-I recommend this [StackOverflow discussion](https://dba.stackexchange.com/questions/13112/whats-the-difference-between-a-cte-and-a-temp-table/13117#13117) to get some more details.
+## Choosing Between a CTE and a Temporary Table
+
+| Use Case                                                | Recommended Option  |
+| ------------------------------------------------------- | ------------------- |
+| One-off query simplification                            | **CTE**             |
+| Reusing intermediate data across multiple statements    | **Temporary table** |
+| Need for indexes or constraints                         | **Temporary table** |
+| Quick, inline transformation or readability improvement | **CTE**             |
+| Large or complex transformations requiring reuse        | **Temporary table** |
+
+In short:
+
+- Use a CTE for readability and short-lived transformations within a single query.
+- Use a temporary table when you need to persist intermediate results, reuse data, or improve performance through indexing and repeated access.
+
+For deeper discussion and community insights, check out this [Stack Overflow thread](https://dba.stackexchange.com/questions/13112/whats-the-difference-between-a-cte-and-a-temp-table/13117#13117).
