@@ -1,9 +1,9 @@
 ---
-title: Statistics 101 - measuring data
+title: Statistics 101 - Measuring Data
 author: thedarkside
 date: 2019-08-12 00:00:00 +0100
-categories: [other]
-tags: [other]
+categories: [Tutorials]
+tags: [Statistics]
 ---
 
 The first step in every statistical analysis is to determine whether the data is **a population** or **a sample**. A population is the entire set of all possible data values that are of interest in a study. It is usually denoted by the capital letter `N`. A sample is a population subset usually denoted by the letter `n`. Most of the time obtaining the whole population data is either impossible or would be extremely hard or expensive. Let's say you want to gather data about students of a specific city or country. To get population data, you would need to contact all students on university campuses, all studying at home, all on the exchange, all part-time students, and so on. Instead, you can draw sample data which means you just contact **randomly selected students**.
@@ -12,7 +12,7 @@ The first step in every statistical analysis is to determine whether the data is
 
 It's important to distinguish descriptive statistics from **inferential statistics**. The latter is used to draw conclusions about the whole population based on its sample.
 
-# Types of Data
+## Types of Data
 
 Having a good understanding of data types is crucial for choosing optimal statistics and visualization methods. At the highest level data can be divided into **qualitative (categorical)** and **quantitative (numerical)**. Categorical data are data that cannot be represented with numbers (or at least not in mathematical meaning) such as brands of cars, gender, yes or no answer, etc. As its name suggests numerical data are numbers and in general any things that can be measured, such as height, weight, age, and so on.  
 
@@ -29,7 +29,7 @@ There are four common ways to describe a set of observations:
 - measures of statistical dispersion (spread, scatter, variability)
 - measures of statistical dependence (if more than one variable is measured)
 
-# Measures of Central Tendency: Mean, Median, Mode
+## Measures of Central Tendency: Mean, Median, Mode
 
 Measures of central tendency attempt to describe a dataset by identifying its central or **typical value**. The most popular measures are arithmetic mean (average), median and mode.  
 
@@ -57,7 +57,7 @@ The last popular measure is the **mode**. It is the value that occurs most often
 
 _There is no single rule as to when particular statistics should be used. If there are a lot of outliers in a dataset, the median or mode should be used (median usually preferred). Nominal data can have only a mode (and sometimes it doesn't even have that). The mean is preferred when the data distribution is continuous and symmetrical._
 
-# Measures of Asymmetry: Skewness and Kurtosis
+## Measures of Asymmetry: Skewness and Kurtosis
 
 The most common tool for measuring asymmetry is **skewness**. It is a **degree of distortion from the normal distribution**. Skewness basically says where the observations are concentrated.
 
@@ -104,14 +104,7 @@ Finally, **low kurtosis** indicates that there are **none or not many outliers**
 
 ![](/assets/img/2019-08-12-measuring-data/platykurtic.jpg)
 
-Below you will find the scripts that generate the graphs presented above:
-
-_[Generate skewness graphs (Jupyter Notebook)](https://github.com/klaudiawolinska/klaudiawolinska.github.io/blob/main/assets/notebooks/2019-08-12-skewness_graph.ipynb)_
-
-_[Generate kurtosis graphs (Jupyter Notebook)](https://github.com/klaudiawolinska/klaudiawolinska.github.io/blob/main/assets/notebooks/2019-08-12-kurtosis_graph.ipynb)_
-
-
-# Measures of Variability: Variance, Standard Deviation, Coefficient of Variation
+## Measures of Variability: Variance, Standard Deviation, Coefficient of Variation
 
 The **variance** measures the dispersion of data points around their mean value. For the population, it is equal to **the sum of squared differences between the observed values and their mean divided by the total number of observations**:
 
@@ -154,7 +147,7 @@ Let's consider an example:
 
 The first column consists of some random prices in EUR. The second column consists of the same prices expressed in HUF (where the exchange rate is 325,37 HUF for 1 EUR). Due to HUF values being larger in general, the mean, variance and standard deviations for these data points are much greater than those for EUR. However, the coefficient of variation is the same for both datasets! Knowing this, we can say that both datasets have the same variability (which was obviously expected).
 
-# Measures of Dependence: Covariance and Correlation
+## Measures of Dependence: Covariance and Correlation
 
 Measures of dependence should be considered when we are working with more than one variable. We say that two variables are related when changes in one variable coexist with changes in the other variable. Such relationships can be **positive** - as one variable goes up, the other also goes up or **negative** - when one goes up, the other goes down. Bigger houses are more expensive (_positive relationship_). When prices of some goods go up, people tend to buy more of other (substitute) goods (_negative relationship_).
 
