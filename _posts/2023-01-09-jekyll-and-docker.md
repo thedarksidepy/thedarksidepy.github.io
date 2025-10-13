@@ -2,8 +2,8 @@
 title: Create a static website using Jekyll and Docker
 author: thedarkside
 date: 2023-01-09 00:00:00 +0100
-categories: [other]
-tags: [other]
+categories: [Tutorials]
+tags: [Docker]
 ---
 
 This tutorial shows how to set up a Docker container with Ruby and Jekyll and create a static website (just like this one). We'll use Visual Studio Code (VSC) to write code and interact with containers. You will also see how to host the website for free using GitHub Pages.
