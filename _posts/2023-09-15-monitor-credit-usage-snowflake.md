@@ -1,44 +1,51 @@
 ---
-title: Monitor credit usage in Snowflake
+title: How to Monitor Credit Usage in Snowflake
 author: thedarkside
 date: 2023-09-15 00:00:00 +0100
-categories: [Snowflake]
+categories: [Blog]
 tags: [Snowflake]
 ---
 
-[Snowflake Pricing Calculator](https://www.snowflake.com/pricing/)
+Understanding how your Snowflake credits are consumed is key to keeping costs under control. Snowflake provides detailed, query-level usage data that can help you monitor warehouse activity, identify expensive workloads, and improve cost efficiency.
 
-Snowflake provides a comprehensive view of the credits consumed by virtual warehouses at hourly granularity in ```snowflake.account_usage.warehouse_metering_history```. This aggregation includes all queries executed within the hour, in addition to the costs associated with maintaining the warehouse and any other related cloud services.
+## Warehouse Credit Usage
+Snowflake tracks compute consumption in the view `SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY` that reports hourly credit usage for each virtual warehouse. The metrics include all queries executed within the hour, along with the cost of keeping the warehouse running, even if idle, and related cloud services.
 
-## Detailed Query Cost Analysis
-To accurately determine the credit cost associated with specific queries, it is advisable to adopt a strategic approach. This involves setting up a dedicated virtual warehouse exclusively for executing the queries of interest. By isolating these queries, you can more precisely calculate their credit consumption.
-
-## Calculation Methodology
-The credit usage for a particular query can be estimated by proportionally distributing the total credits consumed by the warehouse during the hour. The proportion is derived based on the query's execution time relative to the total runtime of the warehouse within that hour.
-
-$$
-\text{Credit Usage per Query} = \left( \frac{\text{Query Execution Time}}{\text{Total Warehouse Runtime}} \right) \times \text{Total Credits Consumed}
-$$
-
-## Benefits
-- **Precision:** This method allows for a more accurate allocation of costs to individual queries, providing clear insights into their resource consumption.
-- **Optimization:** Understanding the credit usage at the query level enables targeted optimization efforts, potentially leading to cost savings.
-- **Transparency:** It fosters transparency in resource utilization, helping stakeholders to better comprehend the financial implications of query execution.
-
-## Sample queries
-
-[Example queries (Snowflake docs)](https://docs.snowflake.com/user-guide/cost-exploring-compute#example-queries)
-
-> `snowflake.account_usage.query_history`: Latency for the view may be up to 45 minutes
-> `snowflake.account_usage.task_history`: Latency for the view may be up to 45 minutes
-> `snowflake.account_usage.graph_versions`: Latency up to 3 hours
-> `snowflake.account_usage.warehouse_metering_history`: New records show on every hour (hourly aggregate)
+> Usage data in `ACCOUNT_USAGE` views typically has a latency of 45–180 minutes.
 {: .prompt-warning }
 
-1. Find the DAG run_id:
-    - After running the DAG go to: Activity > Task History
-    - Select graph run
-    - Little button on the right: Open underlying SQL query in worksheet
+## Estimating Query-Level Costs
+If you want to attribute credit usage to individual queries, you can approximate it by isolating workloads and distributing credits proportionally. The cleanest method is to run the queries of interest on a dedicated warehouse — this avoids cross-query noise. Then, for each query:
+
+```text
+Estimated Query Credits =
+  (Query Execution Time / Total Warehouse Runtime) × Total Credits Consumed
+```
+
+This approach gives a reasonable estimate but may overstate cost if the warehouse sat idle for part of that hour.
+
+## Benefits of Credit Monitoring
+- Visibility – Understand where compute spend originates.
+- Optimization – Identify long-running or inefficient queries.
+- Accountability – Attribute usage to teams, pipelines, or workloads.
+- Forecasting – Detect cost spikes early and plan scaling policies accordingly.
+
+## Example Queries
+
+Snowflake exposes multiple system views that help you analyze credit usage and query activity:
+
+* `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY` – query metrics (~45 min latency)
+* `SNOWFLAKE.ACCOUNT_USAGE.TASK_HISTORY` – task and DAG execution metadata
+* `SNOWFLAKE.ACCOUNT_USAGE.WAREHOUSE_METERING_HISTORY` – hourly credit usage
+
+### 1. Retrieve the DAG run details
+
+Below queries identify a specific task graph (DAG) run in Snowflake’s `TASK_HISTORY` or `COMPLETE_TASK_GRAPHS` views and extract its `run_id`, along with detailed execution metadata such as start and end times, query states, and errors. This forms the entry point for analyzing all queries executed within a single workflow run.
+  
+To find the DAG run_id:
+- After running the DAG go to: Activity > Task History
+- Select graph run
+- Little button on the right: Open underlying SQL query in worksheet
 
     ```sql
     -- Auto-generated timeline query:
@@ -74,14 +81,18 @@ $$
     250;
     ```
 
+Alternatively, you can retrieve the latest completed DAG using:
+
     ```sql
-    -- Alternatively search for the latest complete task graph:
     select * from snowflake.account_usage.complete_task_graphs
     where state = 'SUCCEEDED'
     order by query_start_time desc;
     ```
 
-2. Calculate various metrics using the retrieved DAG `run_id`.
+### 2. Calculate query- and workflow-level metrics
+Using the retrieved `run_id`, below queries join `QUERY_HISTORY` with `WAREHOUSE_METERING_HISTORY` to measure execution performance and estimate the credit cost of each query in the workflow. 
+
+These queries compute per-query resource usage — bytes scanned, rows processed, spill volume, and execution time — and proportionally distribute warehouse credits to each query based on runtime share. They can optionally include stored procedures and aggregate workflow totals to assess overall efficiency and cost.
 
     ```sql
     -- Details of the queries executed by the task graph run
@@ -209,3 +220,12 @@ $$
         and query_type != 'CALL' -- exclude, otherwise this will duplicate some info
     ;
     ```
+
+## Summary
+
+* Use `WAREHOUSE_METERING_HISTORY` to monitor hourly credit usage.
+* Isolate queries on dedicated warehouses when precise measurement is needed.
+* Treat proportional credit estimates as **approximations**, since idle time is also billed.
+* Combine `QUERY_HISTORY` and `METERING_HISTORY` for a complete performance-and-cost view.
+
+With these tools, you can move beyond guessing your Snowflake spend.
