@@ -1,120 +1,125 @@
 ---
-title: Managing users and privileges in Amazon Redshift 
+title: "Managing Users, Roles & Privileges in Amazon Redshift" 
 author: thedarkside
 date: 2021-01-12 00:00:00 +0100
-categories: [AWS]
-tags: [AWS]
+categories: [Blog]
+tags: [AWS, Redshift]
 ---
 
-## Privileges 
-The user that created a database object is its **owner**. Only this user has the privilege to modify or destroy the object and grant privileges on it to other users or groups of users. If you run a `CREATE TABLE` statement you will automatically become an owner of this table. To grant a privilege use the `GRANT` command, to revoke a privilege use the `REVOKE` command.
+Managing access in Redshift means balancing control, collaboration, and security. Whether you’re defining data ownership, setting schema permissions, or granting privileges across teams, understanding Redshift’s access model helps keep your environment secure and maintainable.
 
-Amazon Redshift supports the following privileges:
-- `SELECT` - select data from a table or a view
-- `INSERT` - load data into a table
-- `UPDATE` - update a table column (requires `SELECT` privilege)
-- `DELETE` - delete a data row from a table (requires `SELECT` privilege)
-- `REFERENCES` - create a foreign key constraint (has to be granted on both referenced and referencing table)
-- `CREATE` - create database objects
-- `TEMPORARY` - create temporary tables in the specified database (needed to run Amazon Redshift Spectrum queries)
-- `USAGE` - granted on specific schema, makes objects in that schema accessible
+## Understanding Privileges and Ownership
+In Redshift, every database object has an owner — the user who created it. Owners automatically receive full control over their objects and can modify, drop, or delegate permissions to others.
+
+Privileges are managed through the `GRANT` and `REVOKE` commands:
+
+```sql
+GRANT <privilege> ON <object> TO <user_or_role>;
+REVOKE <privilege> ON <object> FROM <user_or_role>;
+```
+
+Supported privileges include:
+
+- `SELECT`, `INSERT`, `UPDATE`, `DELETE`
+- `REFERENCES` (for foreign key constraints)
+- `CREATE` (for object creation in schemas)
+- `TEMPORARY` (to allow creation of temp tables)
+- `USAGE` (to access a schema)
+
+By default, all users have `CREATE` and `USAGE` on the `public` schema unless revoked. 
 
 ## Superusers
+Superusers bypass all privilege checks. They implicitly own all objects and can grant or revoke any privilege. Because of their power, avoid using the superuser role for daily tasks unrelated to security or administration.
 
-Database superusers have the same privileges as database owners. A superuser can create another superuser. Since superusers always have all privileges, regardless of any `GRANT` or `REVOKE` commands, you should be very careful when using them. Especially when your daily work with the database is not strictly connected with database security management, you should not perform operations using the superuser role. 
+To create a superuser (you must already be a superuser):
 
-To create a new superuser, you have to be logged in as a superuser and run the command `CREATE USER username CREATEUSER PASSWORD password;`. The `CREATEUSER` keyword indicates that a superuser is created (the default is `NOCREATEUSER`).
+```sql
+CREATE USER username CREATEUSER PASSWORD 'password';
+```
 
-## Users
+The `CREATEUSER` keyword designates the new user as a superuser (default is `NOCREATEUSER`).
 
-Amazon Redshift user accounts can be **created and dropped only by a database superuser**. Superusers can own databases and database objects and grant or revoke privileges on those objects to other users or groups of users. Additionally, users with `CREATE DATABASE` permissions can create databases and grant or revoke access to them.
+## Users & Roles
+Only a superuser can create or drop users. Users can own objects, but you can’t drop a user who owns objects without first transferring or dropping those objects.
 
-To create a user, run the command `CREATE USER username PASSWORD password;`. 
+```sql
+CREATE USER username PASSWORD 'password';
+ALTER USER username [options...];
+DROP USER username;
+```
 
-To remove an existing user, run the command `DROP USER username` (or to remove multiple users `DROP USER username1, username2, username3`). Note that you cannot drop a user if it owns any database objects (such as a table, view, schema, or database). On the attempt of dropping such a user, Redshift will return an error. However, Redshift checks only the current database before dropping the user. Therefore, the user can own objects in another database and still be dropped. The owner of these objects will be changed to `unknown`. 
+You can view user information with:
 
-To make changes to an existing user account, use the `ALTER USER` command. Possible modifications are: changing the level of access the user has to the Amazon Redshift system tables and views, disabling the option for a user to change its password, renaming a user, setting an expiration date on a user, or limiting the number of database connections a user is permitted to have open concurrently. 
+```sql
+SELECT * FROM pg_user ORDER BY usename;
+```
 
-To view information about users, query the system table `pg_user`.
+or for system-level metadata:
 
-[PostgreSQL 12 Documentation: pg_user](https://www.postgresql.org/docs/12/view-pg-user.html)
+```sql
+SELECT * FROM svl_user_info;
+```
 
-`sql
-SELECT *
-FROM pg_user
-ORDER BY usename
-;
-`
+Redshift supports groups (roles) — collections of users that share the same privileges. Any privilege granted to a group applies automatically to all its members. You can manage roles via:
 
-To view **all users that are currently running processes** (you must have superuser privileges to see other users' processes, otherwise you will see your own processes only) query the system view `pg_stat_activity`.
+```sql
+CREATE GROUP groupname;
+ALTER GROUP groupname ADD/DROP USER username;
+DROP GROUP groupname;
+```
 
-[PostgreSQL 12 Documentation: The Statistics Collector: pg_stat_activity](https://www.postgresql.org/docs/12/monitoring-stats.html#PG-STAT-ACTIVITY-VIEW)
+Use groups to simplify privilege management, especially in environments with many users. 
 
-`sql
-SELECT DISTINCT usename
-FROM pg_stat_activity
-;
-`
+## Schemas & Search Path
 
-## Groups
+A database contains schemas, each of which holds objects like tables and views. By default, every database includes a schema named `public`. Schemas help organize your data logically and isolate workloads across teams or applications.
 
-Groups are collections of users. Whatever privileges are granted to a group, they are granted to all members of this group. 
+Common operations:
 
-To view all user groups, query the `pg_group` system catalog table.
+```sql
+-- Create a schema
+CREATE SCHEMA schemaname AUTHORIZATION username1;
 
-[PostgreSQL 12 Documentation: pg_group](https://www.postgresql.org/docs/12/view-pg-group.html)
+-- Change owner
+ALTER SCHEMA schemaname OWNER TO username2;
 
-`sql
-SELECT *
-FROM pg_group
-ORDER BY groname
-;
-`
+-- Drop schema and all its objects
+DROP SCHEMA schemaname CASCADE;
+```
 
-Only a superuser can create, alter or drop groups. To create a group and assign users to it run `CREATE GROUP groupname WITH USER username1, username2`. 
+Schemas are similar to directories — they help organize and isolate objects. Redshift limits databases to a maximum number of schemas (commonly ~9,900).
 
-To add a user to the group run `ALTER GROUP groupname ADD USER username`. To remove a user from the group run `ALTER GROUP groupname DROP USER username`. Finally, to rename an existing group run `ALTER GROUP groupname RENAME TO new_groupname`.
+The **search path** defines which schema Redshift searches first when referencing unqualified object names. Objects created without a schema are placed in the first schema in the search path. The system catalog (`pg_catalog`) is always searched, even if not explicitly listed.
 
-To delete a user group use the command `DROP GROUP groupname`. This command deletes the group, but not individual users. A group cannot be dropped if it has any privileges on any objects. To delete such a group, the privileges have to be revoked first. 
+```sql
+SET search_path TO schemaname, public;
+```
 
-## Schemas
+## Inspecting Permissions
+You can view, test, or audit privileges using built-in system views and functions:
 
-A database contains one or more schemas. Each schema has its objects like tables and views. By default, a database has a schema called `PUBLIC`. Schemas are similar to file system directories, except that schemas cannot be nested.
+| Purpose                              | View / Function                                        |
+| ------------------------------------ | ------------------------------------------------------ |
+| List grants for an object            | `SHOW GRANTS`                                          |
+| View schema-level grants             | `SVV_SCHEMA_PRIVILEGES`                                |
+| Check if a user has schema privilege | `HAS_SCHEMA_PRIVILEGE(user, schema, privilege)`        |
+| Check if a user has table privilege  | `HAS_TABLE_PRIVILEGE(user, 'schema.table', privilege)` |
+| Inspect users and groups             | `pg_user`, `pg_group`                                  |
+| Inspect schema definitions           | `pg_namespace`                                         |
 
-Examples of how the usage of schemas can help with organization and concurrency issues:
-- many developers can work in the same database without interfering with each other
-- database is organized into logical groups 
-- names given to objects used by one application do not collide with the names of objects used by other applications
+## Best Practices
+- Use roles or groups for privilege assignment — avoid granting directly to users.
+- Limit superuser accounts to administrative tasks only.
+- Revoke default `CREATE `on `public` schema in shared databases.
+- Regularly audit privileges using `SHOW GRANTS` and system views.
+- Document ownership of critical tables and schemas to prevent orphaned objects.
 
-To define a new schema in a database, use the command `CREATE SCHEMA schema_name` (obviously the name cannot be `public`). To give the ownership of a schema to a specific user run `CREATE SCHEMA schema_name AUTHORIZATION username`. Amazon Redshift allows for a maximum of 9900 schemas to be created within a database.
+## Summary
 
-All schemas created in a database are listed in a `pg_namespace` catalog table. 
+Managing users and privileges in Redshift revolves around three key principles:
 
-[PostgreSQL 12 Documentation: pg_namespace](https://www.postgresql.org/docs/12/catalog-pg-namespace.html)
+1. Define clear ownership and least-privilege access.
+2. Centralize permissions through groups or roles.
+3. Use superuser rights responsibly and sparingly.
 
-`sql
-SELECT *
-FROM pg_namespace
-ORDER BY nspname
-;
-`
-
-To change the definition of an existing schema run `ALTER SCHEMA schema_name`. Possible operations include renaming a schema and changing the owner.
-
-To delete a schema run `DROP SCHEMA schema_name`. Adding a `CASCADE` keyword ensures that all objects within a schema are deleted as well. The `RESTRICT` keyword prevents a schema from being deleted if it contains any objects. 
-
-To create a table within a schema create the table with the format `schema_name.table_name`. To list all tables that belong to a particular schema query `pg_table_def` system catalog table. 
-
-`sql
-SELECT DISTINCT
-    tablename
-FROM pg_table_def
-WHERE schemaname = 'public'
-;
-`
-
-By default, all users have `CREATE` and `USAGE` privileges on the `public` schema. The `REVOKE` command can be used to remove the privilege of creating new objects in the `public` schema.
-
-#### Search Path
-
-A search path is basically a comma-separated list of existing schema names. This list specifies in which schemas (and in what order) Redshift will search for an object (such as a table or a view) if you reference it without an explicit schema component. Also, when objects are created without a specific target schema they are placed in the first schema within the search path. If the search path is empty, the system will return an error. If an object exists in a schema that is not listed in the search path, it can be referenced only by specifying its schema using dot notation. The system catalog schema `pg_catalog` is always searched. If it is listed in the search path, it is searched in the order specified there. If not, it will be searched before any schemas specified in the search path. 
+With these practices, you can maintain a secure, organized Redshift environment that scales cleanly across users and teams.
